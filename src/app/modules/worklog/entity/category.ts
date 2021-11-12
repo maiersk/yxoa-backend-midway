@@ -5,7 +5,7 @@ import { WorkLogAppEntity } from './wlog';
 /**
  * 日志模板/分类
  */
-@EntityModel('wlog_category')
+@EntityModel('work_log_category')
 export class WorkLogCategoryEntity extends BaseEntity {
   @Column({ comment: '名称' })
   name: string;
