@@ -16,6 +16,6 @@ export class WorkLogCategoryService extends BaseService {
    * 得到分类下所有日志
    */
   async wlogs(params: any) {
-    return this.wlogCategoryEntity.find({ relations: ["worklogappentity"] });
+    return this.wlogCategoryEntity.find({ relations: ["wlogs"] });
   }
 }
