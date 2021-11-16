@@ -28,6 +28,7 @@ export class WorkLogAdminController extends BaseController {
       
     })
     category.wlogs = [...category.wlogs, wlog]
+    category.save()
 
     return wlog;
   }
