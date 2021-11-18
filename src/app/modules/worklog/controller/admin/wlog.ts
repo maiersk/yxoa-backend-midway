@@ -24,12 +24,11 @@ export class WorkLogAdminController extends BaseController {
     if (params.categoryId) {
       category = this.wlogCategory.findOne(params.categoryId)
     }
-    const wlog: any = this.wlogEntity.create({
-      
-    })
+    const wlog: any = this.wlogEntity.create(params)
+    wlog.category = category
     category.wlogs = [...category.wlogs, wlog]
     category.save()
 
-    return wlog;
+    return this.ok(wlog)
   }
 }
