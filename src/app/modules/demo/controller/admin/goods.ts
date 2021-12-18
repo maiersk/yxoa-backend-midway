@@ -1,8 +1,8 @@
 import { Get, Provide } from '@midwayjs/decorator';
 import { Context } from 'egg';
-import { CoolController, BaseController } from 'midwayjs-cool-core';
-import { BaseSysUserEntity } from '../../../base/entity/sys/user';
-import { DemoAppGoodsEntity } from '../../entity/goods';
+import { CoolController, BaseController, CoolUrlTag } from '@cool-midway/core';
+import { DemoGoodsEntity } from '../../entity/goods';
+import { SelectQueryBuilder } from 'typeorm';
 
 /**
  * 商品
@@ -12,12 +12,17 @@ import { DemoAppGoodsEntity } from '../../entity/goods';
   // 添加通用CRUD接口
   api: ['add', 'delete', 'update', 'info', 'list', 'page'],
   // 设置表实体
-  entity: DemoAppGoodsEntity,
+  entity: DemoGoodsEntity,
   // 向表插入当前登录用户ID
   insertParam: async (ctx: Context) => {
     return {
       userId: ctx.admin.userId,
     };
+  },
+  // 给请求路径打上标签
+  urlTag: {
+    name: 'ignoreToken',
+    url: ['page'],
   },
   // info接口忽略价格字段
   infoIgnoreProperty: ['price'],
@@ -27,19 +32,10 @@ import { DemoAppGoodsEntity } from '../../entity/goods';
     keyWordLikeFields: ['title'],
     // 让type字段支持筛选
     fieldEq: ['type'],
-    // 指定返回字段
-    select: ['a.*', 'b.name'],
-    // 关联表用户表
-    leftJoin: [
-      {
-        // 管理的表
-        entity: BaseSysUserEntity,
-        // 别名
-        alias: 'b',
-        // 关联条件
-        condition: 'a.userId = b.id',
-      },
-    ],
+    // 4.x 新增 追加其他条件
+    extend: async (find: SelectQueryBuilder<DemoGoodsEntity>) => {
+      find.groupBy('a.id');
+    },
     // 增加其他条件
     where: async (ctx: Context) => {
       return [
@@ -58,6 +54,7 @@ export class DemoAdminGoodsController extends BaseController {
   /**
    * 其他接口
    */
+  @CoolUrlTag('ignoreToken')
   @Get('/other')
   async other() {
     return this.ok('hello, cool-admin!!!');

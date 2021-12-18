@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">cool-admin(midway版)一个很酷的后台权限管理系统，开源免费，模块化、插件化、极速开发CRUD，方便快速构建迭代后台管理系统，支持serverless、docker、普通服务器等多种方式部署
-到 <a href="https://bbs.cool-js.com" target="_blank">论坛</a> 进一步了解
+到 <a href="https://cool-js.com" target="_blank">文档</a> 进一步了解
 <p align="center">
     <a href="https://github.com/cool-team-official/cool-admin-midway/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="GitHub license" />
     <a href=""><img src="https://img.shields.io/github/package-json/v/cool-team-official/cool-admin-midway?style=flat-square" alt="GitHub tag"></a>
@@ -33,12 +33,9 @@
 
 [https://github.com/cool-team-official/cool-admin-vue](https://github.com/cool-team-official/cool-admin-vue)
 
-## QQ群
-2群：539478405
-
 ## 微信群
 
-<img width="260" src="https://cool-show.oss-cn-shanghai.aliyuncs.com/admin/wechat.jpeg" alt="Admin Wechat"></a>
+<img width="260" src="https://cool-show.oss-cn-shanghai.aliyuncs.com/admin/wechat.jpeg?v=1" alt="Admin Wechat"></a>
 
 ## 微信公众号
 
@@ -85,7 +82,7 @@ $ open http://localhost:8001/
 
 ```ts
 import { EntityModel } from '@midwayjs/orm';
-import { BaseEntity } from 'midwayjs-cool-core';
+import { BaseEntity } from '@cool-midway/core';
 import { Column } from 'typeorm';
 
 /**
@@ -113,7 +110,7 @@ export class DemoAppGoodsEntity extends BaseEntity {
 
 ```ts
 import { Provide } from '@midwayjs/decorator';
-import { CoolController, BaseController } from 'midwayjs-cool-core';
+import { CoolController, BaseController } from '@cool-midway/core';
 import { DemoAppGoodsEntity } from '../../entity/goods';
 
 /**
@@ -159,3 +156,31 @@ $ npm stop
 
 
 [midway]: https://midwayjs.org
+
+
+### 服务器
+
+#### 腾讯云特供
+
+不限新老用户，注册过买过都可以享受
+
+|配置|价格|条件|备注|
+|---------|-------|-------|-------|
+|2核2g2M|一年240|个人企业限一台（不限新老用户）||
+|2核4g2M|一年260、两年380|个人企业限一台（不限新老用户）||
+|2核4g3M|一年260、三年600|企业（不限新老用户）||
+|2核4g5M|一年280、三年660|企业（不限新老用户）||
+|4核8g5M|一年320、三年720|企业（不限新老用户）||
+|4核8g10M|一年560、三年1520|企业（不限新老用户）||
+|8核16g5M|一年1800、三年3800|限企业新用户|送独立数据库|
+|8核16g10M|一年2200、三年6600|限企业新用户|送独立数据库|
+|16核32g5M|一年2600、三年6900|限企业新用户|送独立数据库|
+|16核32g10M|一年2900、三年9600|限企业新用户|送独立数据库|
+
+#### 购买咨询，数量有限！！！
+
+<img width="260" src="https://cool-show.oss-cn-shanghai.aliyuncs.com/admin/wechat.jpeg?v=1" alt="Admin Wechat"></a>
+
+#### 阿里云
+
+[点击链接购买](https://www.aliyun.com/minisite/goods?userCode=pw6cig1f)

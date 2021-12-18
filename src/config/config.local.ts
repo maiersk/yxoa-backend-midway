@@ -1,5 +1,4 @@
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
-import { CoolConfig } from 'midwayjs-cool-core';
 
 export type DefaultConfig = PowerPartial<EggAppConfig>;
 
@@ -19,6 +18,10 @@ export default (appInfo: EggAppInfo) => {
     logging: true,
     // 字符集
     charset: 'utf8mb4',
+    // 驱动
+    driver: require('mysql2'),
+    // 设置时区
+    timezone: '+8:00',
   };
 
   config.logger = {
@@ -26,15 +29,6 @@ export default (appInfo: EggAppInfo) => {
       consoleLevel: 'INFO',
     },
   };
-
-    // cool-admin特有的配置
-    config.cool = {
-      // 文件上传
-      file: {
-        // 文件路径前缀 本地上传模式下 有效
-        domain: 'http://127.0.0.1:8001',
-      },
-    } as CoolConfig;
 
   return config;
 };

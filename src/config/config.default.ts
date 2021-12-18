@@ -1,5 +1,5 @@
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
-import { CoolConfig } from 'midwayjs-cool-core';
+import { CoolConfig } from '@cool-midway/core';
 import * as path from 'path';
 
 export type DefaultConfig = PowerPartial<EggAppConfig>;
@@ -66,7 +66,7 @@ export default (appInfo: EggAppInfo) => {
     // 文件上传
     file: {
       // 文件路径前缀 本地上传模式下 有效
-      domain: 'http://127.0.0.1',
+      domain: 'http://127.0.0.1:8001',
     },
   } as CoolConfig;
 

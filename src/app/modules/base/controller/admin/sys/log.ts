@@ -1,5 +1,5 @@
 import { Provide, Post, Inject, Body, Get } from '@midwayjs/decorator';
-import { CoolController, BaseController } from 'midwayjs-cool-core';
+import { CoolController, BaseController } from '@cool-midway/core';
 import { BaseSysLogEntity } from '../../../entity/sys/log';
 import { BaseSysUserEntity } from '../../../entity/sys/user';
 import { BaseSysConfService } from '../../../service/sys/conf';
@@ -12,9 +12,13 @@ import { BaseSysLogService } from '../../../service/sys/log';
 @CoolController({
   api: ['page'],
   entity: BaseSysLogEntity,
+  urlTag: {
+    name: 'a',
+    url: ['add'],
+  },
   pageQueryOp: {
     keyWordLikeFields: ['b.name', 'a.params', 'a.ipAddr'],
-    select: ['a.*, b.name'],
+    select: ['a.*', 'b.name'],
     leftJoin: [
       {
         entity: BaseSysUserEntity,
@@ -34,7 +38,7 @@ export class BaseSysLogController extends BaseController {
   /**
    * 清空日志
    */
-  @Post('/clear')
+  @Post('/clear', { summary: '清理' })
   public async clear() {
     await this.baseSysLogService.clear(true);
     return this.ok();
@@ -43,7 +47,7 @@ export class BaseSysLogController extends BaseController {
   /**
    * 设置日志保存时间
    */
-  @Post('/setKeep')
+  @Post('/setKeep', { summary: '设置保存时间' })
   public async setKeep(@Body() value: number) {
     await this.baseSysConfService.updateVaule('logKeep', value);
     return this.ok();
@@ -52,7 +56,7 @@ export class BaseSysLogController extends BaseController {
   /**
    * 获得日志保存时间
    */
-  @Get('/getKeep')
+  @Get('/getKeep', { summary: '获得设置保存时间' })
   public async getKeep() {
     return this.ok(await this.baseSysConfService.getValue('logKeep'));
   }

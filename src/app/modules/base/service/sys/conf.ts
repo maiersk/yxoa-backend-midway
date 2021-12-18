@@ -1,5 +1,5 @@
 import { Provide } from '@midwayjs/decorator';
-import { BaseService } from 'midwayjs-cool-core';
+import { BaseService } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { BaseSysConfEntity } from '../../entity/sys/conf';
@@ -32,6 +32,7 @@ export class BaseSysConfService extends BaseService {
     await this.baseSysConfEntity
       .createQueryBuilder()
       .update()
+      .where({ cKey })
       .set({ cKey, cValue })
       .execute();
   }

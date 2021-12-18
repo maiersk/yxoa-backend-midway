@@ -1,6 +1,6 @@
 import { Get, Inject, Provide } from '@midwayjs/decorator';
 import { Context } from 'egg';
-import { CoolController, BaseController } from 'midwayjs-cool-core';
+import { CoolController, BaseController } from '@cool-midway/core';
 
 /**
  * 欢迎界面
@@ -13,6 +13,6 @@ export class WelcomeController extends BaseController {
 
   @Get('/')
   public async welcome() {
-    await this.ctx.render('welcome', { text: 'HELLO COOL-ADMIN' });
+    await this.ctx.render('welcome', { text: 'HELLO COOL-ADMIN 4.x' });
   }
 }

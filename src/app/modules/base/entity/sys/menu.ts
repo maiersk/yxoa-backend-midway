@@ -1,5 +1,5 @@
 import { EntityModel } from '@midwayjs/orm';
-import { BaseEntity } from 'midwayjs-cool-core';
+import { BaseEntity } from '@cool-midway/core';
 import { Column } from 'typeorm';
 
 /**
@@ -41,6 +41,6 @@ export class BaseSysMenuEntity extends BaseEntity {
   // 父菜单名称
   parentName: string;
 
-  @Column({ comment: '父菜单名称', default: true })
+  @Column({ comment: '是否显示', default: true })
   isShow: boolean;
 }

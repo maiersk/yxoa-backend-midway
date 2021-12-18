@@ -8,7 +8,7 @@ import {
   Query,
 } from '@midwayjs/decorator';
 import { Context } from 'egg';
-import { CoolController, BaseController } from 'midwayjs-cool-core';
+import { CoolController, BaseController } from '@cool-midway/core';
 import { LoginDTO } from '../../dto/login';
 import { BaseSysLoginService } from '../../service/sys/login';
 import { BaseSysParamService } from '../../service/sys/param';
@@ -28,10 +28,22 @@ export class BaseOpenController extends BaseController {
   @Inject()
   ctx: Context;
 
+  @Inject('cool:eps:open')
+  eps;
+
+  /**
+   * 实体信息与路径
+   * @returns
+   */
+  @Get('/eps', { summary: '实体信息与路径' })
+  public async getEps() {
+    return this.ok(this.eps);
+  }
+
   /**
    * 根据配置参数key获得网页内容(富文本)
    */
-  @Get('/html')
+  @Get('/html', { summary: '获得网页内容的参数值' })
   async htmlByKey(@Query() key: string) {
     this.ctx.body = await this.baseSysParamService.htmlByKey(key);
   }
@@ -40,7 +52,7 @@ export class BaseOpenController extends BaseController {
    * 登录
    * @param login
    */
-  @Post('/login')
+  @Post('/login', { summary: '登录' })
   async login(@Body(ALL) login: LoginDTO) {
     return this.ok(await this.baseSysLoginService.login(login));
   }
@@ -48,7 +60,7 @@ export class BaseOpenController extends BaseController {
   /**
    * 获得验证码
    */
-  @Get('/captcha')
+  @Get('/captcha', { summary: '验证码' })
   async captcha(
     @Query() type: string,
     @Query() width: number,
@@ -60,7 +72,7 @@ export class BaseOpenController extends BaseController {
   /**
    * 刷新token
    */
-  @Get('/refreshToken')
+  @Get('/refreshToken', { summary: '刷新token' })
   async refreshToken(@Query() refreshToken: string) {
     return this.ok(await this.baseSysLoginService.refreshToken(refreshToken));
   }

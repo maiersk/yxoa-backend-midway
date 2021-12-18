@@ -1,5 +1,5 @@
 import { Inject, Provide } from '@midwayjs/decorator';
-import { BaseService, ICoolCache, CoolCommException } from 'midwayjs-cool-core';
+import { BaseService, ICoolCache, CoolCommException } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { BaseSysUserEntity } from '../../entity/sys/user';
@@ -89,9 +89,9 @@ export class BaseSysUserService extends BaseService {
    */
   async person() {
     const info = await this.baseSysUserEntity.findOne({
-      id: this.ctx.admin.userId,
+      id: this.ctx.admin?.userId,
     });
-    delete info.password;
+    delete info?.password;
     return info;
   }
 

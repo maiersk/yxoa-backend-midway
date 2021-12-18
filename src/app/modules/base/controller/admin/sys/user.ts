@@ -1,5 +1,5 @@
 import { Body, Inject, Post, Provide } from '@midwayjs/decorator';
-import { CoolController, BaseController } from 'midwayjs-cool-core';
+import { CoolController, BaseController } from '@cool-midway/core';
 import { BaseSysUserEntity } from '../../../entity/sys/user';
 import { BaseSysUserService } from '../../../service/sys/user';
 
@@ -19,7 +19,7 @@ export class BaseSysUserController extends BaseController {
   /**
    * 移动部门
    */
-  @Post('/move')
+  @Post('/move', { summary: '移动部门' })
   async move(@Body() departmentId: number, @Body() userIds: []) {
     await this.baseSysUserService.move(departmentId, userIds);
     return this.ok();

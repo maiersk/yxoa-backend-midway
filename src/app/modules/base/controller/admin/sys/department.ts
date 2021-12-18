@@ -1,5 +1,5 @@
 import { ALL, Body, Inject, Post, Provide } from '@midwayjs/decorator';
-import { CoolController, BaseController } from 'midwayjs-cool-core';
+import { CoolController, BaseController } from '@cool-midway/core';
 import { BaseSysDepartmentEntity } from '../../../entity/sys/department';
 import { BaseSysDepartmentService } from '../../../service/sys/department';
 
@@ -19,7 +19,7 @@ export class BaseDepartmentController extends BaseController {
   /**
    * 部门排序
    */
-  @Post('/order')
+  @Post('/order', { summary: '排序' })
   async order(@Body(ALL) params: any) {
     await this.baseDepartmentService.order(params);
     return this.ok();

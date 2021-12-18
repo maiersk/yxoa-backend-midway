@@ -18,4 +18,3 @@ typings/
 .cache
 .serverless/
 .vscode/launch.json
-/public/uploads/

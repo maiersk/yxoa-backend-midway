@@ -1,6 +1,6 @@
 import { Provide } from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
-import { CoolController, BaseController } from 'midwayjs-cool-core';
+import { CoolController, BaseController } from '@cool-midway/core';
 import { Repository } from 'typeorm';
 import { WorkLogCategoryEntity } from '../../entity/category';
 import { WorkLogAppEntity } from '../../entity/wlog'
