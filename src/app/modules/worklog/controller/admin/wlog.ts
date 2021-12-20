@@ -3,7 +3,8 @@ import { InjectEntityModel } from '@midwayjs/orm';
 import { CoolController, BaseController } from '@cool-midway/core';
 import { Repository } from 'typeorm';
 import { WorkLogCategoryEntity } from '../../entity/category';
-import { WorkLogAppEntity } from '../../entity/wlog'
+import { WorkLogAppEntity } from '../../entity/wlog';
+import { BaseSysUserEntity } from '../../../base/entity/sys/user';
 
 /**
  * 日志贴文 控制器
@@ -18,6 +19,8 @@ export class WorkLogAdminController extends BaseController {
   wlogEntity: Repository<WorkLogAppEntity>;
   @InjectEntityModel(WorkLogCategoryEntity)
   wlogCategory: Repository<WorkLogCategoryEntity>;
+  @InjectEntityModel(BaseSysUserEntity)
+  baseUser: Repository<BaseSysUserEntity>;
 
   async add(params: any) {
     let category
@@ -30,5 +33,9 @@ export class WorkLogAdminController extends BaseController {
     category.save()
 
     return this.ok(wlog)
+  }
+
+  async daySummay(params: any) {
+
   }
 }
