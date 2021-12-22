@@ -1,4 +1,4 @@
-import { Provide } from '@midwayjs/decorator';
+import { Post, Provide } from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { CoolController, BaseController } from '@cool-midway/core';
 import { Repository } from 'typeorm';
@@ -22,16 +22,17 @@ export class WorkLogAdminController extends BaseController {
   @InjectEntityModel(BaseSysUserEntity)
   baseUser: Repository<BaseSysUserEntity>;
 
+  @Post('/add')
   async add(params: any) {
     let category
-    if (params.categoryId) {
-      category = this.wlogCategory.findOne(params.categoryId)
+    if (params.categorys) {
+      category = this.wlogCategory.find({ where: { id: params.categorys } })
     }
     const wlog: any = this.wlogEntity.create(params)
-    wlog.category = category
+    wlog.categorys = category
     category.wlogs = [...category.wlogs, wlog]
     category.save()
-
+    wlog.save()
     return this.ok(wlog)
   }
 
