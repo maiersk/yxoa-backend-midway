@@ -1,6 +1,6 @@
 import { Provide } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
-import { WorkLogAppEntity } from '../entity/wlog';
+import { WorkLogAppEntity } from '../../entity/wlog';
 
 /**
  * 描述

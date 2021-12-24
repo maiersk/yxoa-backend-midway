@@ -26,13 +26,13 @@ export class WorkLogAdminController extends BaseController {
   async add(params: any) {
     let category
     if (params.categorys) {
-      category = this.wlogCategory.find({ where: { id: params.categorys } })
+      category = await this.wlogCategory.find({ where: { id: params.categorys } })
     }
-    const wlog: any = this.wlogEntity.create(params)
+    const wlog: any = await this.wlogEntity.create(params)
     wlog.categorys = category
-    category.wlogs = [...category.wlogs, wlog]
-    category.save()
-    wlog.save()
+    // category.wlogs = [...category.wlogs, wlog]
+    // await category.save()
+    // await wlog.save()
     return this.ok(wlog)
   }
 
