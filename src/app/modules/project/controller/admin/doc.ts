@@ -1,6 +1,6 @@
 import { Provide } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
-import { ProjectAppDocEntity } from '../entity/doc'
+import { ProjectAppDocEntity } from '../../entity/doc'
 
 /**
  * 项目文档
