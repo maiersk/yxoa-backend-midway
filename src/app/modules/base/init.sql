@@ -169,11 +169,11 @@ INSERT INTO `base_sys_menu` VALUES (26, '1900-01-20 00:35:05.024000', '1900-01-2
 INSERT INTO `base_sys_menu` VALUES (27, '2019-09-12 15:52:44.000000', '2019-09-15 22:11:56.000000', 2, '权限管理', NULL, NULL, 0, 'icon-auth', 1, NULL, 0, 1);
 INSERT INTO `base_sys_menu` VALUES (29, '2019-09-12 17:35:51.000000', '2021-03-08 23:01:39.000000', 105, '请求日志', '/sys/log', NULL, 1, 'icon-log', 1, 'cool/modules/base/views/log.vue', 1, 1);
 INSERT INTO `base_sys_menu` VALUES (30, '2019-09-12 17:37:03.000000', '2021-03-03 10:16:26.000000', 29, '权限', NULL, 'base:sys:log:page,base:sys:log:clear,base:sys:log:getKeep,base:sys:log:setKeep', 2, NULL, 1, NULL, 0, 1);
-INSERT INTO `base_sys_menu` VALUES (43, '2019-11-07 14:22:34.000000', '2021-03-08 23:02:51.000000', 45, 'crud 示例', '/crud', NULL, 1, 'icon-favor', 1, 'cool/modules/space/views/crud.vue', 1, 1);
+INSERT INTO `base_sys_menu` VALUES (43, '2019-11-07 14:22:34.000000', '2021-03-08 23:02:51.000000', 45, 'crud 示例', '/crud', NULL, 1, 'icon-favor', 90, 'cool/modules/space/views/crud.vue', 1, 0);
 INSERT INTO `base_sys_menu` VALUES (45, '2019-11-07 22:36:57.000000', '2019-11-11 15:21:10.000000', 1, '应用库', '/ui-lib', NULL, 0, 'icon-common', 2, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (47, '2019-11-08 09:35:08.000000', '2021-02-27 17:16:35.000000', NULL, '框架教程', '/tutorial', NULL, 0, 'icon-task', 98, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (48, '2019-11-08 09:35:53.000000', '2021-03-03 11:03:21.000000', 47, '文档', '/tutorial/doc', NULL, 1, 'icon-log', 0, 'https://admin.cool-js.com', 1, 1);
-INSERT INTO `base_sys_menu` VALUES (49, '2019-11-09 22:11:13.000000', '2021-03-09 09:50:46.000000', 45, 'quill 富文本编辑器', '/editor-quill', NULL, 1, 'icon-favor', 2, 'cool/modules/space/views/editor-quill.vue', 1, 1);
+INSERT INTO `base_sys_menu` VALUES (49, '2019-11-09 22:11:13.000000', '2021-03-09 09:50:46.000000', 45, 'quill 富文本编辑器', '/editor-quill', NULL, 91, 'icon-favor', 2, 'cool/modules/space/views/editor-quill.vue', 1, 0);
 INSERT INTO `base_sys_menu` VALUES (59, '2019-11-18 16:50:27.000000', '2019-11-18 16:50:27.000000', 97, '部门列表', NULL, 'base:sys:department:list', 2, NULL, 0, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (60, '2019-11-18 16:50:45.000000', '2019-11-18 16:50:45.000000', 97, '新增部门', NULL, 'base:sys:department:add', 2, NULL, 0, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (61, '2019-11-18 16:50:59.000000', '2019-11-18 16:50:59.000000', 97, '更新部门', NULL, 'base:sys:department:update', 2, NULL, 0, NULL, 1, 1);
@@ -188,7 +188,7 @@ INSERT INTO `base_sys_menu` VALUES (82, '1900-01-20 13:30:25.791000', '1900-01-2
 INSERT INTO `base_sys_menu` VALUES (83, '1900-01-20 13:30:40.469000', '1900-01-20 13:30:40.469000', 79, '查看', NULL, 'base:sys:param:page,base:sys:param:list,base:sys:param:info', 2, NULL, 0, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (84, '2020-07-25 16:21:30.000000', '2020-07-25 16:21:30.000000', NULL, '通用', NULL, NULL, 0, 'icon-radioboxfill', 99, NULL, 1, 0);
 INSERT INTO `base_sys_menu` VALUES (85, '2020-07-25 16:22:14.000000', '2021-03-03 10:36:00.000000', 84, '图片上传', NULL, 'space:info:page,space:info:list,space:info:info,space:info:add,space:info:delete,space:info:update,space:type:page,space:type:list,space:type:info,space:type:add,space:type:delete,space:type:update', 2, NULL, 1, NULL, 1, 1);
-INSERT INTO `base_sys_menu` VALUES (86, '2020-08-12 09:56:27.000000', '2021-03-08 23:03:03.000000', 45, '文件上传', '/upload', NULL, 1, 'icon-favor', 3, 'cool/modules/space/views/upload.vue', 1, 1);
+INSERT INTO `base_sys_menu` VALUES (86, '2020-08-12 09:56:27.000000', '2021-03-08 23:03:03.000000', 45, '文件上传', '/upload', NULL, 1, 'icon-favor', 92, 'cool/modules/space/views/upload.vue', 1, 0);
 INSERT INTO `base_sys_menu` VALUES (90, '1900-01-20 10:26:58.615000', '1900-01-20 10:26:58.615000', 84, '客服聊天', NULL, 'base:app:im:message:read,base:app:im:message:page,base:app:im:session:page,base:app:im:session:list,base:app:im:session:unreadCount,base:app:im:session:delete', 2, NULL, 0, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (96, '2021-01-12 14:12:20.000000', '2021-03-08 23:02:40.000000', 1, '应用预览', '/space', NULL, 1, 'icon-favor', 0, 'cool/modules/space/views/preview.vue', 1, 1);
 INSERT INTO `base_sys_menu` VALUES (97, '1900-01-20 14:14:02.000000', '2021-03-09 11:03:09.000000', 27, '用户列表', '/sys/user', NULL, 1, 'icon-user', 0, 'cool/modules/base/views/user.vue', 1, 1);
