@@ -23,7 +23,7 @@ export class DocApiController extends BaseController {
   @Post('/generate', { summary: '生成文档' })
   async generate(@Query() id: number, @Body() fields: any) {
     try {
-      const doc = await this.docService.find(id)
+      const doc = await this.docService.info(id)
 
       if (!doc) { this.ok({ message: '找不到该id实例' }) }
       if (!doc.templateFile) { this.ok({ message: '找不到模板文件' }) }

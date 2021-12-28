@@ -29,8 +29,14 @@ export class ProjectAppEntity extends BaseEntity {
   pur_phone: string;
 
   @Column({ comment: '总价' })
-  totalPrice: string;
+  totalPrice: number;
 
-  @Column({ comment: '收款日' })
-  payDay: string;
+  @Column({ comment: '文档树表名'})
+  tableName: string;
+
+  @Column({ type: 'timestamp', comment: '目标竣工日' })
+  tcDay: Date;
+
+  @Column({ type: 'timestamp', comment: '收款日' })
+  payDay: Date;
 }

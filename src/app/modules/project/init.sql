@@ -8,8 +8,8 @@ CREATE TABLE `project_origin_tree`  (
   `updateTime` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
   `parentId` bigint(20) DEFAULT NULL COMMENT '父目录ID',
   `name` varchar(255) NOT NULL COMMENT '目录名称',
-  `router` varchar(255) DEFAULT NULL COMMENT '文档地址',
-  `perms` varchar(255) DEFAULT NULL COMMENT '权限标识',
+  'docId' bigint(20) DEFAULT NULL COMMENT '文档ID',
+  `file` varchar(255) DEFAULT NULL COMMENT '文档地址',
   `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '类型 0：目录 1：文档 ',
   `orderNum` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `isShow` tinyint(4) NOT NULL DEFAULT '1' COMMENT '父目录名称',
@@ -22,7 +22,7 @@ CREATE TABLE `project_origin_tree`  (
 -- Records of project_origin_tree
 -- ----------------------------
 BEGIN;
-INSERT INTO `project_origin_tree` VALUES (1, '2021-09-11 11:13:33.000000', '2021-09-11 11:13:33.000000', NULL, '项目文档库', '/')
+-- INSERT INTO `project_app_tree` VALUES (1, '2021-09-11 11:13:33.000000', '2021-09-11 11:13:33.000000', NULL, 1, '项目文档库', '/')
 COMMIT;
 
 -- ----------------------------

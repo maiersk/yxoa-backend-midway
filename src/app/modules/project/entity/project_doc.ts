@@ -5,11 +5,11 @@ import { Column } from 'typeorm';
 /**
  * 描述
  */
-@EntityModel('project_app_tree')
-export class ProjectAppDocTreeEntity extends BaseEntity {
+@EntityModel('project_app_prj_doc')
+export class XxxEntity extends BaseEntity {
   @Column({ comment: '项目Id' })
-  projectId: number;
+  projectId: string;
 
   @Column({ comment: '文档Id' })
-  docId: number;
+  docId: string;
 }
