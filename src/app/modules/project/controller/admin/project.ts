@@ -10,4 +10,6 @@ import { ProjectAppEntity } from '../../entity/project'
   api: ['add', 'delete', 'update', 'info', 'list', 'page'],
   entity: ProjectAppEntity,
 })
-export class ProjectController extends BaseController {}
+export class ProjectController extends BaseController {
+
+}

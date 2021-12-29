@@ -14,10 +14,10 @@ export class ProjectAppEntity extends BaseEntity {
   builderName: string;
 
   @Column({ comment: '监理单位名称' })
-  SupervisionName: string;
+  supervisionName: string;
 
   @Column({ comment: '承建单位名称' })
-  UndertookName: string;
+  undertookName: string;
 
   @Column({ comment: '进度' })
   process: string;
@@ -31,12 +31,12 @@ export class ProjectAppEntity extends BaseEntity {
   @Column({ comment: '总价' })
   totalPrice: number;
 
-  @Column({ comment: '文档树表名'})
+  @Column({ comment: '文档树表名', nullable: true })
   tableName: string;
 
   @Column({ type: 'timestamp', comment: '目标竣工日' })
-  tcDay: Date;
+  tcDate: Date;
 
   @Column({ type: 'timestamp', comment: '收款日' })
-  payDay: Date;
+  payDate: Date;
 }
