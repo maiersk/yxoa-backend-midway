@@ -8,8 +8,8 @@ import { Column } from 'typeorm';
 @EntityModel('project_app_prj_doc')
 export class XxxEntity extends BaseEntity {
   @Column({ comment: '项目Id' })
-  projectId: string;
+  projectId: number;
 
   @Column({ comment: '文档Id' })
-  docId: string;
+  docId: number;
 }

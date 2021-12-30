@@ -8,8 +8,8 @@ import { Column } from 'typeorm';
 @EntityModel('project_app_users')
 export class ProjectAppUserEntity extends BaseEntity {
   @Column({ comment: '项目Id' })
-  projectId: string;
+  projectId: number;
 
   @Column({ comment: '用户Id' })
-  userId: string;
+  userId: number;
 }
