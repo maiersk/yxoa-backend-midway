@@ -17,6 +17,16 @@ export class ProjectAppService extends BaseService {
   @InjectEntityModel(ProjectAppUserEntity)
   projectAppUserEntity: Repository<ProjectAppUserEntity>;
 
+  async createTreeTable(project: ProjectAppEntity): Promise<any> {
+    await this.nativeQuery(
+      'create table project_app_tree_? like project_app_tree;',
+      [project.id]
+    )
+    project.tableName = `project_app_tree_${project.id}`
+    await this.projectAppEntity.update(project.id, project)
+    return {}
+  }
+
   /**
    * 根据用户ID获得所有用户项目
    * @param userId
