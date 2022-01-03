@@ -13,15 +13,15 @@ export class ProjectAppDocEntity extends BaseEntity {
   @Column({ comment: '格式' })
   format: string;
 
-  @Column({ comment: '数据' })
-  data: number;
+  @Column({ comment: '数据', nullable: true })
+  data: string;
 
   @Column({ comment: '文件' })
-  templateFile: number;
+  templateFile: string;
 
   @Column({ comment: '数量' })
   count: number;
 
-  @Column({ comment: '留言' })
+  @Column({ comment: '备注', nullable: true })
   remark: string;
 }
