@@ -1,29 +1,31 @@
--- ----------------------------
--- Table structure for project_origin_tree
--- ----------------------------
--- DROP TABLE IF EXISTS `project_origin_tree`;
--- CREATE TABLE `project_origin_tree`  (
---   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
---   `createTime` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
---   `updateTime` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
---   `parentId` bigint(20) DEFAULT NULL COMMENT '父目录ID',
---   `name` varchar(255) NOT NULL COMMENT '目录名称',
---   'docId' bigint(20) DEFAULT NULL COMMENT '文档ID',
---   `file` varchar(255) DEFAULT NULL COMMENT '文档地址',
---   `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '类型 0：目录 1：文档 ',
---   `orderNum` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
---   `isShow` tinyint(4) NOT NULL DEFAULT '1' COMMENT '父目录名称',
---   PRIMARY KEY (`id`),
---   KEY `IDX_05e3d6a56604771a6da47ebf8e` (`createTime`),
---   KEY `IDX_d5203f18daaf7c3fe0ab34497f` (`updateTime`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8mb4;
+----------------------------
+-- Table structure for project_app_tree
+----------------------------
+DROP TABLE IF EXISTS `project_app_tree`;
+CREATE TABLE `project_app_tree`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `parentId` bigint NOT NULL COMMENT '父目录ID',
+  `name` varchar(255) NOT NULL COMMENT '项目名称',
+  `docId` int NULL DEFAULT NULL COMMENT '文档Id',
+  `docData` varchar(255) NULL DEFAULT NULL COMMENT '文档数据',
+  `docCount` int NULL DEFAULT NULL COMMENT '文档数量',
+  `type` tinyint NOT NULL DEFAULT 0 COMMENT '类型 0：目录 1：文档',
+  `remark` varchar(255) NULL DEFAULT '' COMMENT '备注',
+  `orderNum` int(11) NOT NULL COMMENT '排序',
+  `createTime` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
+  `updateTime` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `IDX_4511e666b869bb94598b58d2fe`(`createTime`) USING BTREE,
+  INDEX `IDX_9aec39ace16a95f87ddb9a2f92`(`updateTime`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Records of project_origin_tree
+-- Records of project_app_tree
 -- ----------------------------
--- BEGIN;
--- INSERT INTO `project_app_tree` VALUES (1, '2021-09-11 11:13:33.000000', '2021-09-11 11:13:33.000000', NULL, 1, '项目文档库', '/')
--- COMMIT;
+BEGIN;
+INSERT INTO `project_app_tree` VALUES (1, NULL, '项目文档库', NULL, NULL, NULL, 0, '', 1, '2021-09-11 11:13:33.000000', '2021-09-11 11:13:33.000000')
+INSERT INTO `project_app_tree` VALUES (1, NULL, '开工', NULL, NULL, NULL, 0, '', 1, '2021-09-11 11:13:33.000000', '2021-09-11 11:13:33.000000')
+COMMIT;
 
 -- ----------------------------
 -- Records of base_sys_menu

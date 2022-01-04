@@ -3,7 +3,7 @@ import { BaseEntity } from '@cool-midway/core';
 import { Column } from 'typeorm';
 
 /**
- * 描述
+ * 项目实体
  */
 @EntityModel('project_app_prj')
 export class ProjectAppEntity extends BaseEntity {
