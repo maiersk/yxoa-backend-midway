@@ -12,4 +12,7 @@ export class ProjectAppUserEntity extends BaseEntity {
 
   @Column({ comment: '用户Id' })
   userId: number;
+
+  @Column({ comment: '项目工作内容' })
+  workCtx: string
 }

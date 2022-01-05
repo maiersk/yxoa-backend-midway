@@ -4,7 +4,6 @@ import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { ProjectAppDocTreeEntity } from '../entity/docTree';
 import { Context } from 'egg';
-import { ProjectAppDocEntity } from '../entity/doc';
 import * as _ from 'lodash';
 
 /**
@@ -17,9 +16,6 @@ export class ProjectAppDocTreeService extends BaseService {
 
   @InjectEntityModel(ProjectAppDocTreeEntity)
   projectAppDocTreeEntity: Repository<ProjectAppDocTreeEntity>;
-
-  @Inject()
-  projectAppDocEntity: ProjectAppDocEntity;
 
   /**
    * 获得所有目录
@@ -39,6 +35,7 @@ export class ProjectAppDocTreeService extends BaseService {
         }
       })
     }
+    return items
   }
 
   /**
