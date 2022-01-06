@@ -15,8 +15,8 @@ export class WorkLogCategoryController extends BaseController {
   @Inject()
   wlogCategoryService : WorkLogCategoryService
   
-  @Get('/categorywlogs')
+  @Get('/wlogs')
   async categorywlogs(@Body() id: number) {
-    return this.wlogCategoryService.wlogs(id);
+    return this.wlogCategoryService.getwlogs(id);
   }
 }

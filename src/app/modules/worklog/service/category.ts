@@ -15,7 +15,22 @@ export class WorkLogCategoryService extends BaseService {
   /**
    * 得到分类下所有日志
    */
-  async wlogs(params: any) {
+  async getwlogs(params: any) {
     return this.wlogCategoryEntity.find({ relations: ["wlogs"] });
   }
+
+  /**
+   * 添加日志用户
+   */
+  async addUsers(params: any) {
+    
+  }
+
+  /**
+   * 删除日志用户
+   */
+  async delUser(params: any) {
+
+  }
+
 }
