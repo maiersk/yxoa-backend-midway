@@ -7,7 +7,7 @@ import { Column } from 'typeorm';
  */
 @EntityModel('project_app_tree')
 export class ProjectAppDocTreeEntity extends BaseEntity {
-  @Column({ comment: '父目录ID', type: 'bigint', nullable: false })
+  @Column({ comment: '父目录ID', type: 'bigint', nullable: true })
   parentId: number;
 
   @Column({ comment: '项目名称' })
