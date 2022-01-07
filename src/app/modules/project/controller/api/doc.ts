@@ -1,10 +1,11 @@
 import { resolve } from 'path';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { Body, Inject, Post, Provide, Query } from '@midwayjs/decorator';
-import { CoolController, BaseController } from '@cool-midway/core';
+import { CoolController, BaseController, CoolCommException } from '@cool-midway/core';
 import { ProjectAppDocEntity } from '../../entity/doc';
 import { ProjectAppService } from '../../service/project';
 import { ProjectAppDocService } from '../../service/doc';
+import createReport from 'docx-templates';
 
 /**
  * 文档对外功能 api
@@ -31,9 +32,25 @@ export class DocApiController extends BaseController {
       filepath = resolve(__dirname, '../files/temp', doc.templateFile)
       file = await readFileSync(filepath)
 
-      return this.ok()
+      const filebuffer = await createReport({
+        template: file,
+        data: {
+          ...fields
+        },
+        cmdDelimiter: ['{', '}']
+      })
+
+      const fileName = `${doc.name}.${doc.docFormat}`
+      const writePath = resolve(__dirname, '../files/temp', fileName)
+
+      await writeFileSync(writePath, filebuffer)
+
+      return this.ok({
+        fileName,
+        // file: `http://${}`
+      })
     } catch (err) {
-      throw new Error(err.message)
+      throw new CoolCommException(err.message)
     }
   }
 }

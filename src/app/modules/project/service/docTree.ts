@@ -1,10 +1,11 @@
+import * as _ from 'lodash';
+import { Context } from 'egg';
 import { Inject, Provide } from '@midwayjs/decorator';
 import { BaseService } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { ProjectAppDocTreeEntity } from '../entity/docTree';
-import { Context } from 'egg';
-import * as _ from 'lodash';
+import { ProjectAppDocEntity } from '../entity/doc';
 
 /**
  * 工程树
@@ -16,6 +17,9 @@ export class ProjectAppDocTreeService extends BaseService {
 
   @InjectEntityModel(ProjectAppDocTreeEntity)
   projectAppDocTreeEntity: Repository<ProjectAppDocTreeEntity>;
+
+  @InjectEntityModel(ProjectAppDocEntity)
+  projectAppDocEntity: Repository<ProjectAppDocEntity>;
 
   /**
    * 获得所有目录
@@ -36,6 +40,21 @@ export class ProjectAppDocTreeService extends BaseService {
       })
     }
     return items
+  }
+
+  /**
+   * 新增
+   * @param param
+   */
+  async add(param: any): Promise<Object> {
+    if (param.type == 1) {
+      const doc = await this.projectAppDocEntity.findOne({where: { id: param.docId }})
+      param.name = doc.name
+      param.docCount = doc.count
+      return this.projectAppDocTreeEntity.save(param)
+    } else {
+      return this.projectAppDocTreeEntity.save(param);
+    }
   }
 
   /**

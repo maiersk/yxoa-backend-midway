@@ -10,13 +10,13 @@ export class ProjectAppDocTreeEntity extends BaseEntity {
   @Column({ comment: '父目录ID', type: 'bigint', nullable: true })
   parentId: number;
 
-  @Column({ comment: '项目名称' })
+  @Column({ comment: '名称' })
   name: string;
 
   @Column({ comment: '文档Id', nullable: true })
   docId: number;
 
-  @Column({ comment: '文档数据', nullable: true })
+  @Column({ type: 'text', comment: '文档数据', nullable: true })
   docData: string;
 
   @Column({ comment: '文档数量', nullable: true })

@@ -13,7 +13,7 @@ export class ProjectAppDocEntity extends BaseEntity {
   @Column({ comment: '类型 0：模板文档 1：补充文档', default: 0 })
   type: number;
 
-  @Column({ comment: '数据', nullable: true })
+  @Column({ type: 'text', comment: '数据', nullable: true })
   data: string;
 
   @Column({ comment: '文件' })
