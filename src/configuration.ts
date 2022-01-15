@@ -4,8 +4,9 @@ import { Application } from 'egg';
 import * as view from '@midwayjs/view-nunjucks';
 import * as orm from '@midwayjs/orm';
 import * as cool from '@cool-midway/core';
+import * as swagger from '@midwayjs/swagger';
 // import * as wxpay from '@cool-midway/wxpay';
-import * as oss from '@cool-midway/oss';
+// import * as oss from '@cool-midway/oss';
 // import * as redis from '@cool-midway/redis';
 // import * as queue from '@cool-midway/queue';
 // import * as alipay from '@cool-midway/alipay';
@@ -18,14 +19,19 @@ import * as oss from '@cool-midway/oss';
     view,
     // 必须，不可移除， https://typeorm.io  打不开？ https://typeorm.biunav.com/zh/
     orm,
+    // swagger文档 访问地址 http://127.0.0.1:8001/swagger-ui/index.html
+    {
+      component: swagger,
+      enabledEnvironment: ['local'],
+    },
     // 必须，不可移除， cool-admin 官方组件 https://www.cool-js.com
     cool,
     // oss插件，需要到后台配置之后才有用，默认是本地上传
-    oss,
+    // oss,
     // 将缓存替换成redis
-    //redis,
-    // 队列
-    //queue,
+    // redis,
+    // // 队列
+    // queue,
     // 微信支付
     //wxpay,
     // 支付宝支付
