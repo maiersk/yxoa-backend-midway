@@ -2,7 +2,7 @@ import { Get, Inject, Provide, Query } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
 import { ProjectAppEntity } from '../../entity/project'
 import { ProjectAppService } from '../../service/project';
-import { ProjectAppUserService } from '../../service/projectuser';
+import { ProjectAppUserService } from '../../service/project_user';
 
 /**
  * 描述
