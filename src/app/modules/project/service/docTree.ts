@@ -4,7 +4,7 @@ import { Inject, Provide } from '@midwayjs/decorator';
 import { BaseService } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import { ProjectAppDocTreeEntity } from '../entity/docTree';
+import { ProjectAppDocTreeEntity } from '../entity/doctree';
 import { ProjectAppDocEntity } from '../entity/doc';
 
 /**

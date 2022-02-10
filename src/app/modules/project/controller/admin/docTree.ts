@@ -1,7 +1,7 @@
 import { Inject, Provide } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
-import { ProjectAppDocTreeEntity } from '../../entity/docTree';
-import { ProjectAppDocTreeService } from '../../service/docTree';
+import { ProjectAppDocTreeEntity } from '../../entity/doctree';
+import { ProjectAppDocTreeService } from '../../service/doctree';
 
 /**
  * 工程文档树形结构
