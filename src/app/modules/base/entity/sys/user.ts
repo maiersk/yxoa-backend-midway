@@ -52,4 +52,7 @@ export class BaseSysUserEntity extends BaseEntity {
 
   @Column({ comment: 'socketId', nullable: true })
   socketId: string;
+
+  @Column({ comment: '微信openid', nullable: true })
+  wx_openid: string;
 }
