@@ -14,8 +14,10 @@ run/
 .tsbuildinfo
 .tsbuildinfo.*
 src/app/public/uploads/
+src/app/public/projects/
 typings/
 .cache
 .serverless/
 .vscode/launch.json
 public/uploads/
+public/projects/

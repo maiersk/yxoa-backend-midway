@@ -1,15 +1,14 @@
-----------------------------
+-- --------------------------
 -- Table structure for project_app_tree
-----------------------------
+-- --------------------------
 DROP TABLE IF EXISTS `project_app_tree`;
 CREATE TABLE `project_app_tree`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `parentId` bigint NOT NULL COMMENT '父目录ID',
-  `name` varchar(255) NOT NULL COMMENT '项目名称',
-  `docId` int NULL DEFAULT NULL COMMENT '文档Id',
-  `docData` varchar(255) NULL DEFAULT NULL COMMENT '文档数据',
-  `docCount` int NULL DEFAULT NULL COMMENT '文档数量',
+  `name` varchar(255) NOT NULL COMMENT '名称',
   `type` tinyint NOT NULL DEFAULT 0 COMMENT '类型 0：目录 1：文档',
+  `docId` int NULL DEFAULT NULL COMMENT '文档Id',
+  `data` varchar(255) NULL DEFAULT NULL COMMENT '数据',
   `remark` varchar(255) NULL DEFAULT '' COMMENT '备注',
   `orderNum` int(11) NOT NULL COMMENT '排序',
   `createTime` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
@@ -23,8 +22,7 @@ CREATE TABLE `project_app_tree`  (
 -- Records of project_app_tree
 -- ----------------------------
 BEGIN;
-INSERT INTO `project_app_tree` VALUES (1, NULL, '项目文档库', NULL, NULL, NULL, 0, '', 1, '2021-09-11 11:13:33.000000', '2021-09-11 11:13:33.000000')
-INSERT INTO `project_app_tree` VALUES (1, NULL, '开工', NULL, NULL, NULL, 0, '', 1, '2021-09-11 11:13:33.000000', '2021-09-11 11:13:33.000000')
+INSERT INTO `project_app_tree` VALUES (1, NULL, '项目文档库', 1, NULL, NULL, '', 1, '2021-09-11 11:13:33.000000', '2021-09-11 11:13:33.000000')
 COMMIT;
 
 -- ----------------------------
