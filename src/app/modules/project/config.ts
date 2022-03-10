@@ -12,5 +12,6 @@ export default (app: Application) => {
     description: '工程项目管理模块',
     // 中间件
     middlewares: [],
+    order: 0
   } as ModuleConfig;
 };

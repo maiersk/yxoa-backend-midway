@@ -1,4 +1,4 @@
-import { Body, Inject, Post, Provide } from '@midwayjs/decorator';
+import { Body, Inject, Post, Get, Query, Provide } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
 import { ProjectAppEntity } from '../../entity/project'
 import { ProjectAppService } from '../../service/project';
@@ -28,5 +28,15 @@ export class ProjectController extends BaseController {
   @Post('/deluser')
   async delUser(@Body() projectId: number, @Body() userId: number) {
     return await this.projectAppUserService.delUser(projectId, userId);
+  }
+
+  @Get('/getbyuser')
+  async getByUser(@Query() userId: number) {
+    return await this.projectAppUserService.getByUser(userId);
+  }
+
+  @Get('/getusers')
+  async getUsers(@Query() projectId: number) {
+    return await this.projectAppUserService.getUsers(projectId);
   }
 }

@@ -20,13 +20,4 @@ export class ProjectApiController extends BaseController {
   @Inject()
   projectAppUserService: ProjectAppUserService;
 
-  @Get('/getbyuser')
-  async getByUser(@Query() userId: number) {
-    return await this.projectAppUserService.getByUser(userId);
-  }
-
-  @Get('/getusers')
-  async getUsers(@Query() projectId: number) {
-    return await this.projectAppUserService.getUsers(projectId);
-  }
 }
