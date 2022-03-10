@@ -3,6 +3,8 @@ import * as ipdb from 'ipip-ipdb';
 import * as _ from 'lodash';
 import { Context } from 'egg';
 
+import { networkInterfaces } from 'os'
+
 /**
  * 帮助类
  */
@@ -65,5 +67,18 @@ export class Utils {
    */
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+}
+
+export function getIpAddres() {
+  const interfaces = networkInterfaces()
+  for (const devName in interfaces) {
+    const iface = interfaces[devName]
+    for (let i = 0; i < iface.length; i++) {
+      const alias = iface[i]
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+        return alias.address
+      }
+    }
   }
 }

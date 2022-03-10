@@ -7,8 +7,8 @@ import * as cool from '@cool-midway/core';
 import * as swagger from '@midwayjs/swagger';
 // import * as wxpay from '@cool-midway/wxpay';
 // import * as oss from '@cool-midway/oss';
-// import * as redis from '@cool-midway/redis';
-// import * as queue from '@cool-midway/queue';
+import * as redis from '@cool-midway/redis';
+import * as queue from '@cool-midway/queue';
 // import * as alipay from '@cool-midway/alipay';
 // import * as socket from '@cool-midway/socket';
 
