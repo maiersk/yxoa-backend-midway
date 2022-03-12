@@ -54,4 +54,11 @@ INSERT INTO `base_sys_menu` VALUES (152, '2021-12-29 01:36:43.911118', '2021-12-
 INSERT INTO `base_sys_menu` VALUES (153, '2021-12-29 01:36:43.917816', '2021-12-29 01:36:43.917816', 149, '详情', NULL, 'project:doc:info', 2, NULL, 0, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (154, '2021-12-29 01:36:43.922480', '2021-12-29 01:36:43.922480', 149, '全部', NULL, 'project:doc:list', 2, NULL, 0, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (155, '2021-12-29 01:36:43.926439', '2021-12-29 01:36:43.926439', 149, '分页', NULL, 'project:doc:page', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (156, '2021-12-29 01:36:43.833000', '2021-12-29 01:37:19.625000', 134, '各方联系人', '/project/admin/contacts', NULL, 1, 'icon-news', 4, 'cool/modules/project/views/admin/contacts.vue', 1, 1);
+INSERT INTO `base_sys_menu` VALUES (157, '2021-12-29 01:36:43.891248', '2021-12-29 01:36:43.891248', 156, '新增', NULL, 'project:contacts:add', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (158, '2021-12-29 01:36:43.901474', '2021-12-29 01:36:43.901474', 156, '删除', NULL, 'project:contacts:delete', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (159, '2021-12-29 01:36:43.911118', '2021-12-29 01:36:43.911118', 156, '修改', NULL, 'project:contacts:update;project:contacts:info', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (160, '2021-12-29 01:36:43.917816', '2021-12-29 01:36:43.917816', 156, '详情', NULL, 'project:contacts:info', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (161, '2021-12-29 01:36:43.922480', '2021-12-29 01:36:43.922480', 156, '全部', NULL, 'project:contacts:list', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (162, '2021-12-29 01:36:43.926439', '2021-12-29 01:36:43.926439', 156, '分页', NULL, 'project:contacts:page', 2, NULL, 0, NULL, 1, 1);
 COMMIT;
