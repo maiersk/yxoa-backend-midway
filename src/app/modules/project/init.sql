@@ -61,4 +61,11 @@ INSERT INTO `base_sys_menu` VALUES (159, '2021-12-29 01:36:43.911118', '2021-12-
 INSERT INTO `base_sys_menu` VALUES (160, '2021-12-29 01:36:43.917816', '2021-12-29 01:36:43.917816', 156, '详情', NULL, 'project:contacts:info', 2, NULL, 0, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (161, '2021-12-29 01:36:43.922480', '2021-12-29 01:36:43.922480', 156, '全部', NULL, 'project:contacts:list', 2, NULL, 0, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (162, '2021-12-29 01:36:43.926439', '2021-12-29 01:36:43.926439', 156, '分页', NULL, 'project:contacts:page', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (163, '2021-12-29 01:36:43.833000', '2021-12-29 01:37:19.625000', 134, '工程设备', '/project/admin/equipment', NULL, 1, 'icon-tag', 4, 'cool/modules/project/views/admin/equipment.vue', 1, 1);
+INSERT INTO `base_sys_menu` VALUES (164, '2021-12-29 01:36:43.891248', '2021-12-29 01:36:43.891248', 163, '新增', NULL, 'project:equipment:add', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (165, '2021-12-29 01:36:43.901474', '2021-12-29 01:36:43.901474', 163, '删除', NULL, 'project:equipment:delete', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (166, '2021-12-29 01:36:43.911118', '2021-12-29 01:36:43.911118', 163, '修改', NULL, 'project:equipment:update;project:equipment:info', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (167, '2021-12-29 01:36:43.917816', '2021-12-29 01:36:43.917816', 163, '详情', NULL, 'project:equipment:info', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (168, '2021-12-29 01:36:43.922480', '2021-12-29 01:36:43.922480', 163, '全部', NULL, 'project:equipment:list', 2, NULL, 0, NULL, 1, 1);
+INSERT INTO `base_sys_menu` VALUES (169, '2021-12-29 01:36:43.926439', '2021-12-29 01:36:43.926439', 163, '分页', NULL, 'project:equipment:page', 2, NULL, 0, NULL, 1, 1);
 COMMIT;
