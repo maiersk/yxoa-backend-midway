@@ -52,7 +52,7 @@ export class ProjectAppDocTreeService extends BaseService {
       param.name = doc.name;
       param.data = doc.data;
       param.count = doc.count;
-      return this.projectAppDocTreeEntity.save(param)
+      return this.projectAppDocTreeEntity.save(param);
     } else {
       return this.projectAppDocTreeEntity.save(param);
     }
@@ -111,13 +111,13 @@ export class ProjectAppDocTreeService extends BaseService {
    * 获得所有目录
    */
   async prjDocList(param: any) {
-    const items = await this.nativeQuery(`SELECT * FROM ${param.tableName};`)
+    const items = await this.nativeQuery(`SELECT * FROM ${param.tableName};`);
 
     if (!_.isEmpty(items)) {
       items.forEach(e => {
         const parentItem = items.filter(m => {
           if (e.parentId == m.id) {
-            return m.name
+            return m.name;
           }
         })
         if (!_.isEmpty(parentItem)) {
@@ -125,7 +125,14 @@ export class ProjectAppDocTreeService extends BaseService {
         }
       })
     }
-    return items
+    return items;
+  }
+
+  /**
+   * 获得获取单个
+   */
+  async prjDocInfo(param: any) {
+    return await this.nativeQuery(`SELECT * FROM ${param.tableName} WHERE id = ${param.id} LIMIT 1;`);
   }
 
   /**
@@ -168,16 +175,7 @@ export class ProjectAppDocTreeService extends BaseService {
       data = ${param.data ? `'${param.data}'` : 'DEFAULT'},
       remark = ${param.remark ? `'${param.remark}'` : 'DEFAULT'}, orderNum = ${param.orderNum} WHERE id = ${param.id};`
 
-    if (param.type == 1) {
-      const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
-      param.name = doc.name;
-      param.data = doc.data;
-      param.count = doc.count;
-
-      return await this.nativeQuery(sql(param))
-    } else {
-      return await this.nativeQuery(sql(param));
-    }
+    return await this.nativeQuery(sql(param));
   }
 
   /**

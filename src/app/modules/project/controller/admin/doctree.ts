@@ -1,8 +1,8 @@
-import { ALL, Body, Get, Inject, Post, Provide, Query } from '@midwayjs/decorator';
+import { ALL, Body, Inject, Post, Provide } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
 import { ProjectAppDocTreeEntity } from '../../entity/doctree';
 import { ProjectAppDocTreeService } from '../../service/doctree';
-
+import * as _ from 'lodash';
 /**
  * 工程文档树形结构
  */
@@ -28,10 +28,22 @@ export class ProjectAppDocTreeController extends BaseController {
   /**
    * 获得所有目录
    */
-  @Post('/prjdoclist', { summary: 'prjdoc排序'})
+  @Post('/prjdoclist', { summary: 'prjdoc列表'})
   async prjDocList(@Body() tableName: any) {
     const list = await this.projectAppDocTreeService.prjDocList({ tableName });
     return this.ok([...list]);
+  }
+
+  /**
+   * 获得节点
+   */
+  @Post('/prjdocinfo', { summary: 'prjdocx信息'})
+  async prjDocInfo(@Body() tableName: any, @Body() id: number) {
+    const items = await this.projectAppDocTreeService.prjDocInfo({ tableName, id });
+    if (_.isEmpty(items)) {
+      return this.ok('not find')
+    }
+    return this.ok(...items);
   }
 
   /**
