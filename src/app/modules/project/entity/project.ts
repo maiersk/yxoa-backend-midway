@@ -34,8 +34,14 @@ export class ProjectAppEntity extends BaseEntity {
   @Column({ comment: '文档树表名', nullable: true })
   tableName: string;
 
-  @Column({ type: 'timestamp', comment: '目标竣工日' })
-  tcDate: Date;
+  @Column({ type: 'timestamp', comment: '计划开工日期' })
+  startDate: Date;
+  
+  @Column({ type: 'timestamp', comment: '计划竣工日期' })
+  planDate: Date;
+
+  @Column({ comment: '工期' })
+  dateCount: number;
 
   @Column({ type: 'timestamp', comment: '收款日' })
   payDate: Date;

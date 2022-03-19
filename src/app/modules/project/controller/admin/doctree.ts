@@ -2,7 +2,8 @@ import { ALL, Body, Inject, Post, Provide } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
 import { ProjectAppDocTreeEntity } from '../../entity/doctree';
 import { ProjectAppDocTreeService } from '../../service/doctree';
-import * as _ from 'lodash';
+import { ProjectAppDocService } from '../../service/doc';
+
 /**
  * 工程文档树形结构
  */
@@ -16,6 +17,9 @@ export class ProjectAppDocTreeController extends BaseController {
   @Inject()
   projectAppDocTreeService: ProjectAppDocTreeService;
 
+  @Inject()
+  docService: ProjectAppDocService;
+
   /**
    * 部门排序
    */
@@ -28,7 +32,7 @@ export class ProjectAppDocTreeController extends BaseController {
   /**
    * 获得所有目录
    */
-  @Post('/prjdoclist', { summary: 'prjdoc列表'})
+  @Post('/prjdoclist', { summary: 'prjdoc列表' })
   async prjDocList(@Body() tableName: any) {
     const list = await this.projectAppDocTreeService.prjDocList({ tableName });
     return this.ok([...list]);
@@ -37,20 +41,22 @@ export class ProjectAppDocTreeController extends BaseController {
   /**
    * 获得节点
    */
-  @Post('/prjdocinfo', { summary: 'prjdocx信息'})
+  @Post('/prjdocinfo', { summary: 'prjdocx信息' })
   async prjDocInfo(@Body() tableName: any, @Body() id: number) {
-    const items = await this.projectAppDocTreeService.prjDocInfo({ tableName, id });
-    if (_.isEmpty(items)) {
-      return this.ok('not find')
+    const item = await this.projectAppDocTreeService.prjDocInfo({ tableName, id });
+
+    if (item.docId) {
+      const doc = await this.docService.projectAppDocEntity.findOne({ id: item.docId });
+      item.templateFile = doc.templateFile;
     }
-    return this.ok(...items);
+    return this.ok(item);
   }
 
   /**
    * 新增
    * @param param
    */
-  @Post('/prjdocadd', { summary: 'prjdoc添加'})
+  @Post('/prjdocadd', { summary: 'prjdoc添加' })
   async prjDocAdd(@Body(ALL) params: any) {
     await this.projectAppDocTreeService.prjDocAdd(params);
     return this.ok();
@@ -60,7 +66,7 @@ export class ProjectAppDocTreeController extends BaseController {
    * 更新
    * @param param
    */
-  @Post('/prjdocupdate', { summary: 'prjdoc删除'})
+  @Post('/prjdocupdate', { summary: 'prjdoc删除' })
   async prjDocUpdate(@Body(ALL) data: any) {
     await this.projectAppDocTreeService.prjDocUpdate(data);
     return this.ok();
@@ -70,7 +76,7 @@ export class ProjectAppDocTreeController extends BaseController {
    * 删除
    * @param ids
    */
-  @Post('/prjdocdelete', { summary: 'prjdoc删除'})
+  @Post('/prjdocdelete', { summary: 'prjdoc删除' })
   async prjDocDelete(@Body(ALL) params: any, @Body() ids: any) {
     await this.projectAppDocTreeService.prjDocDelete(params, ids);
     return this.ok();
@@ -80,7 +86,7 @@ export class ProjectAppDocTreeController extends BaseController {
    * 部门排序
    * @param params
    */
-  @Post('/prjdocorder', { summary: 'prjdoc排序'})
+  @Post('/prjdocorder', { summary: 'prjdoc排序' })
   async prjDocOrder(@Body() tableName: any, @Body() ids: any) {
     await this.projectAppDocTreeService.prjDocOrder(tableName, ids);
     return this.ok();

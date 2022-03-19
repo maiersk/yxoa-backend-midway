@@ -29,13 +29,35 @@ export class DocController extends BaseController {
   @Post('/generate', { summary: '生成文档' })
   async generate(@Query() id: number, @Body() projectId: number, @Body() fields: any) {
     try {
-      console.log(id, projectId, fields)
+      // console.log(id, projectId, fields)
       const { doc, project } = await this.docService.findEntitys({ id, projectId });
 
-      console.log(doc, project);
+      // console.log(doc, project);
 
-      let filepath = join(this.ctx.app.baseDir, '..', `public`, new URL(doc.templateFile).pathname)
+      const filePathTemplate = (item) => {
+        return join(this.ctx.app.baseDir, '..', `public`, new URL(item).pathname)
+      }
+      let filepath = filePathTemplate(doc.templateFile)
       let file = await readFileSync(filepath)
+
+      // 图片字段，字段使用_img才匹配
+      const images = {};
+      await Object.keys(fields).map((key) => {
+        if (key.includes("_img")) {
+          let keyfunc = key.replace('_img', '');
+          keyfunc = keyfunc.replace(keyfunc.charAt(0), keyfunc.charAt(0).toUpperCase());
+
+          const file = readFileSync(filePathTemplate(fields[key]));
+          images[`get${keyfunc}`] = (w: number, h: number) => {
+            return {
+              width: w,
+              height: h,
+              data: file,
+              extension: '.png'
+            }
+          }
+        };
+      })
 
       const filebuffer = await createReport({
         template: file,
@@ -43,11 +65,17 @@ export class DocController extends BaseController {
           project,
           ...fields
         },
+        additionalJsContext: {
+          getTxt() {
+            return `ss_str`
+          },
+          ...images
+        },
         cmdDelimiter: ['{', '}']
       })
 
       const prjFilePath = join(this.ctx.app.baseDir, '..', `public/uploads`);
-      const existsPrjs = await existsSync(join(prjFilePath, 'projects')) 
+      const existsPrjs = await existsSync(join(prjFilePath, 'projects'))
       const existsPrjItem = await existsSync(join(prjFilePath, `projects/${project.name}`))
       if (!existsPrjs) {
         await mkdirSync(join(prjFilePath, 'projects'));

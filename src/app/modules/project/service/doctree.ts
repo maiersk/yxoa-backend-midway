@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { Context } from 'egg';
 import { Inject, Provide } from '@midwayjs/decorator';
-import { BaseService } from '@cool-midway/core';
+import { BaseService, CoolCommException } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { ProjectAppDocTreeEntity } from '../entity/doctree';
@@ -132,7 +132,15 @@ export class ProjectAppDocTreeService extends BaseService {
    * 获得获取单个
    */
   async prjDocInfo(param: any) {
-    return await this.nativeQuery(`SELECT * FROM ${param.tableName} WHERE id = ${param.id} LIMIT 1;`);
+    try {
+      const items = await this.nativeQuery(`SELECT * FROM ${param.tableName} WHERE id = ${param.id} LIMIT 1;`);
+      if (_.isEmpty(items)) {
+        return new CoolCommException('not find');
+      }
+      return items[0];
+    } catch (err) {
+      throw new CoolCommException(err.message)
+    }
   }
 
   /**
