@@ -1,6 +1,6 @@
-import { ALL, Body, Inject, Provide } from '@midwayjs/decorator';
+import { Body, Inject, Provide } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
-import { BaseAppSpaceInfoEntity } from '../../../base/entity/app/space/info';
+import { BaseAppSpaceInfoEntity } from '../../entity/info';
 import { BaseAppSpaceInfoService } from '../../service/info';
 import { existsSync } from 'fs';
 

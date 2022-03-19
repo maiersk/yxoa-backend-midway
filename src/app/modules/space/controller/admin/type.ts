@@ -1,6 +1,6 @@
 import { Provide } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
-import { BaseAppSpaceTypeEntity } from '../../../base/entity/app/space/type';
+import { BaseAppSpaceTypeEntity } from '../../entity/type';
 
 /**
  * 空间分类

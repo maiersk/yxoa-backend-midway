@@ -28,6 +28,8 @@ CREATE TABLE `base_app_space_info` (
   `url` varchar(255) NOT NULL COMMENT '地址',
   `type` varchar(255) NOT NULL COMMENT '类型',
   `classifyId` bigint(20) DEFAULT NULL COMMENT '分类ID',
+  `name` varchar(255) DEFAULT NULL COMMENT '分类ID',
+  `ownerId` bigint() DEFAULT NULL COMMENT '分类ID',
   PRIMARY KEY (`id`),
   KEY `IDX_4aed04cbfa2ecdc01485b86e51` (`createTime`),
   KEY `IDX_abd5de4a4895eb253a5cabb20f` (`updateTime`)
