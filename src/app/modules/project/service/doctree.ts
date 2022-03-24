@@ -105,13 +105,27 @@ export class ProjectAppDocTreeService extends BaseService {
 
 
 
-
-
+  /**
+   * 
+   * @param projectId 项目ID
+   * @returns 项目树状数据库表名
+   */
+  private getTabname(projectId: number = 0) {
+    try {
+      if (projectId === 0) {
+        throw new CoolCommException('没有传入项目ID参数');
+      }
+      return `project_app_tree_${projectId}`;
+    } catch (err) {
+      throw new CoolCommException(err.message);
+    }
+  }
+  
   /**
    * 获得所有目录
    */
   async prjDocList(param: any) {
-    const items = await this.nativeQuery(`SELECT * FROM ${param.tableName};`);
+    const items = await this.nativeQuery(`SELECT * FROM ${this.getTabname(param.projectId)};`);
 
     if (!_.isEmpty(items)) {
       items.forEach(e => {
@@ -133,7 +147,7 @@ export class ProjectAppDocTreeService extends BaseService {
    */
   async prjDocInfo(param: any) {
     try {
-      const items = await this.nativeQuery(`SELECT * FROM ${param.tableName} WHERE id = ${param.id} LIMIT 1;`);
+      const items = await this.nativeQuery(`SELECT * FROM ${this.getTabname(param.projectId)} WHERE id = ${param.id} LIMIT 1;`);
       if (_.isEmpty(items)) {
         return new CoolCommException('not find');
       }
@@ -148,25 +162,29 @@ export class ProjectAppDocTreeService extends BaseService {
    * @param param
    */
   async prjDocAdd(param: any): Promise<Object> {
-    const sql = (param) => `INSERT INTO ${[param.tableName]} (
-        id, createTime, updateTime,
-        parentId, name, type, docId,
-        data, remark, orderNum
-      ) VALUES (
-        DEFAULT, DEFAULT, DEFAULT,
-        ${param?.parentId ?? 'DEFAULT'}, '${param.name}', ${param.type}, ${param?.docId ?? 'DEFAULT'},
-        '${param?.data ?? ''}', '${param?.remark ?? ''}', ${param?.orderNum ?? 'DEFAULT'}
-      );`
-
-    if (param.type == 1) {
-      const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
-      param.name = doc.name;
-      param.data = doc.data;
-      param.count = doc.count;
-      console.log(param, doc);
-      return await this.nativeQuery(sql(param))
-    } else {
-      return await this.nativeQuery(sql(param));
+    try {
+      const sql = (param) => `INSERT INTO ${this.getTabname(param.projectId)}} (
+          id, createTime, updateTime,
+          parentId, name, type, docId,
+          data, remark, orderNum
+        ) VALUES (
+          DEFAULT, DEFAULT, DEFAULT,
+          ${param?.parentId ?? 'DEFAULT'}, '${param.name}', ${param.type}, ${param?.docId ?? 'DEFAULT'},
+          '${param?.data ?? ''}', '${param?.remark ?? ''}', ${param?.orderNum ?? 'DEFAULT'}
+        );`
+  
+      if (param.type == 1) {
+        const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
+        param.name = doc.name;
+        param.data = doc.data;
+        param.count = doc.count;
+        console.log(param, doc);
+        return await this.nativeQuery(sql(param));
+      } else {
+        return await this.nativeQuery(sql(param));
+      }      
+    } catch (err) {
+      throw new CoolCommException(err.message);
     }
   }
 
@@ -176,7 +194,7 @@ export class ProjectAppDocTreeService extends BaseService {
    * @param param
    */
   async prjDocUpdate(param: any) {
-    const sql = (param) => `UPDATE ${param.tableName} SET
+    const sql = (param) => `UPDATE ${this.getTabname(param.projectId)} SET
       updateTime = CURRENT_TIMESTAMP,
       parentId = ${param.parentId}, type = ${param.type}, docId = ${param?.docId ?? 'DEFAULT'},
       name = ${param.name ? `'${param.name}'` : 'DEFAULT'},
@@ -198,8 +216,8 @@ export class ProjectAppDocTreeService extends BaseService {
       idArr = ids.split(',');
     }
     for (const id of idArr) {
-      await this.nativeQuery(`DELETE FROM ${param.tableName} WHERE id = ${id};`);
-      await this.prjDocDelChildItem(param.tableName, id);
+      await this.nativeQuery(`DELETE FROM ${this.getTabname(param.projectId)} WHERE id = ${id};`);
+      await this.prjDocDelChildItem(param.projectId, id);
     }
   }
 
@@ -207,17 +225,22 @@ export class ProjectAppDocTreeService extends BaseService {
    * 删除子目录
    * @param id
    */
-  private async prjDocDelChildItem(tableName, id) {
-    const delItem = await this.nativeQuery(`SELECT * FROM ${tableName} WHERE parentId = ${id};`)
-    if (_.isEmpty(delItem)) {
-      return;
-    }
-    const delItemIds = delItem.map(e => {
-      return e.id;
-    })
-    await this.nativeQuery(`DELETE FROM ${tableName} WHERE id IN(${delItemIds.join(',')});`);
-    for (const itemId of delItemIds) {
-      await this.prjDocDelChildItem(tableName, itemId)
+  private async prjDocDelChildItem(projectId, id) {
+    try {
+      const tableName = this.getTabname(projectId)
+      const delItem = await this.nativeQuery(`SELECT * FROM ${tableName} WHERE parentId = ${id};`)
+      if (_.isEmpty(delItem)) {
+        return;
+      }
+      const delItemIds = delItem.map(e => {
+        return e.id;
+      })
+      await this.nativeQuery(`DELETE FROM ${tableName} WHERE id IN(${delItemIds.join(',')});`);
+      for (const itemId of delItemIds) {
+        await this.prjDocDelChildItem(tableName, itemId)
+      }
+    } catch (err) {
+      throw new CoolCommException(err.message);
     }
   }
 
@@ -225,10 +248,10 @@ export class ProjectAppDocTreeService extends BaseService {
    * 部门排序
    * @param params
    */
-  async prjDocOrder(tableName, params) {
+  async prjDocOrder(projectId, params) {
     for (const e of params) {
       await this.nativeQuery(`
-        UPDATE ${tableName} SET id = ${e.id},
+        UPDATE ${this.getTabname(projectId)} SET id = ${e.id},
           parentId = ${e.parentId},
           orderNum = ${e.orderNum},
           updateTime = CURRENT_TIMESTAMP WHERE id IN (${e.id});`);

@@ -33,8 +33,8 @@ export class ProjectAppDocTreeController extends BaseController {
    * 获得所有目录
    */
   @Post('/prjdoclist', { summary: 'prjdoc列表' })
-  async prjDocList(@Body() tableName: any) {
-    const list = await this.projectAppDocTreeService.prjDocList({ tableName });
+  async prjDocList(@Body() projectId: any) {
+    const list = await this.projectAppDocTreeService.prjDocList({ projectId });
     return this.ok([...list]);
   }
 
@@ -42,8 +42,8 @@ export class ProjectAppDocTreeController extends BaseController {
    * 获得节点
    */
   @Post('/prjdocinfo', { summary: 'prjdocx信息' })
-  async prjDocInfo(@Body() tableName: any, @Body() id: number) {
-    const item = await this.projectAppDocTreeService.prjDocInfo({ tableName, id });
+  async prjDocInfo(@Body() projectId: any, @Body() id: number) {
+    const item = await this.projectAppDocTreeService.prjDocInfo({ projectId, id });
 
     if (item.docId) {
       const doc = await this.docService.projectAppDocEntity.findOne({ id: item.docId });
@@ -87,8 +87,8 @@ export class ProjectAppDocTreeController extends BaseController {
    * @param params
    */
   @Post('/prjdocorder', { summary: 'prjdoc排序' })
-  async prjDocOrder(@Body() tableName: any, @Body() ids: any) {
-    await this.projectAppDocTreeService.prjDocOrder(tableName, ids);
+  async prjDocOrder(@Body() projectId: any, @Body() ids: any) {
+    await this.projectAppDocTreeService.prjDocOrder(projectId, ids);
     return this.ok();
   }
 }
