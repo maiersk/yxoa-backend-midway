@@ -163,7 +163,7 @@ export class ProjectAppDocTreeService extends BaseService {
    */
   async prjDocAdd(param: any): Promise<Object> {
     try {
-      const sql = (param) => `INSERT INTO ${this.getTabname(param.projectId)}} (
+      const sql = (param) => `INSERT INTO ${this.getTabname(param.projectId)} (
           id, createTime, updateTime,
           parentId, name, type, docId,
           data, remark, orderNum
@@ -175,14 +175,10 @@ export class ProjectAppDocTreeService extends BaseService {
   
       if (param.type == 1) {
         const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
-        param.name = doc.name;
         param.data = doc.data;
         param.count = doc.count;
-        console.log(param, doc);
-        return await this.nativeQuery(sql(param));
-      } else {
-        return await this.nativeQuery(sql(param));
-      }      
+      }
+      return await this.nativeQuery(sql(param));
     } catch (err) {
       throw new CoolCommException(err.message);
     }
@@ -194,14 +190,18 @@ export class ProjectAppDocTreeService extends BaseService {
    * @param param
    */
   async prjDocUpdate(param: any) {
-    const sql = (param) => `UPDATE ${this.getTabname(param.projectId)} SET
-      updateTime = CURRENT_TIMESTAMP,
-      parentId = ${param.parentId}, type = ${param.type}, docId = ${param?.docId ?? 'DEFAULT'},
-      name = ${param.name ? `'${param.name}'` : 'DEFAULT'},
-      data = ${param.data ? `'${param.data}'` : 'DEFAULT'},
-      remark = ${param.remark ? `'${param.remark}'` : 'DEFAULT'}, orderNum = ${param.orderNum} WHERE id = ${param.id};`
+    try {
+      const sql = (param) => `UPDATE ${this.getTabname(param.projectId)} SET
+        updateTime = CURRENT_TIMESTAMP,
+        parentId = ${param.parentId}, type = ${param.type}, docId = ${param?.docId ?? 'DEFAULT'},
+        name = ${param.name ? `'${param.name}'` : 'DEFAULT'},
+        data = ${param.data ? `'${param.data}'` : 'DEFAULT'},
+        remark = ${param.remark ? `'${param.remark}'` : 'DEFAULT'}, orderNum = ${param.orderNum} WHERE id = ${param.id};`
 
-    return await this.nativeQuery(sql(param));
+      return await this.nativeQuery(sql(param));
+    } catch (err) {
+      throw new CoolCommException(err.message);
+    }
   }
 
   /**
