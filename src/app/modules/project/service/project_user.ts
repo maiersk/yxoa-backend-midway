@@ -1,9 +1,10 @@
-import { Provide } from '@midwayjs/decorator';
-import { BaseService, CoolCommException } from '@cool-midway/core';
+import { Config, Provide } from '@midwayjs/decorator';
+import { BaseService, CoolCommException, CoolConfig } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ProjectAppUserEntity } from '../entity/project_user';
 import { BaseSysUserEntity } from '../../base/entity/sys/user';
+import { BaseSysDepartmentEntity } from '../../base/entity/sys/department';
 import * as _ from 'lodash';
 
 /**
@@ -11,11 +12,61 @@ import * as _ from 'lodash';
  */
 @Provide()
 export class ProjectAppUserService extends BaseService {
+  @Config('cool')
+  config: CoolConfig;
+
   @InjectEntityModel(ProjectAppUserEntity)
   projectAppUserEntity: Repository<ProjectAppUserEntity>;
 
   @InjectEntityModel(BaseSysUserEntity)
   baseSysUserEntity: Repository<BaseSysUserEntity>;
+
+  @InjectEntityModel(BaseSysDepartmentEntity)
+  baseSysDepartmentEntity: Repository<BaseSysDepartmentEntity>;
+
+  async page(query: any, option: any, connectionName?: any): Promise<any> {
+    try {
+      const { size = this.config.page.size, page = 1, projectId } = query;
+      const users = await this.projectAppUserEntity.findAndCount({
+        where: projectId ? { projectId } : {},
+        relations: ["user"]
+      });
+      
+      const result = users[0].map((item) => {
+        const user = item.user;
+        delete item.user;
+        delete user.password;
+
+        return {
+          ...item,
+          ...user
+        }
+      })
+
+      return {
+        list: result,
+        pagination: {
+          page: parseInt(page),
+          size: parseInt(size),
+          total: users[1] ? users[1] : 0,
+        }
+      }
+    } catch (err) {
+      throw new CoolCommException(err.message);
+    }
+  }
+
+  async list(query: any, option: any, connectionName?: any): Promise<any> {
+    const { projectId } = query;
+    return await this.projectAppUserEntity.findAndCount({
+      where: projectId ? { projectId } : {},
+      relations: ["user"]
+    });
+  }
+
+  async info(id: any, infoIgnoreProperty?: string[]): Promise<any> {
+    return await this.projectAppUserEntity.find({ id });
+  }
 
   /**
    * 添加项目参与用户
@@ -23,61 +74,35 @@ export class ProjectAppUserService extends BaseService {
    * @param userId
    * @param workCtx
    */
-   async addUser(projectId: number, userId: number, workCtx: string): Promise<void> {
-    const exists = await this.projectAppUserEntity.findOne({
-      projectId, userId
-    })
-    if (!_.isEmpty(exists)) {
-      throw new CoolCommException('项目已添加该用户')
+  async add(param: any): Promise<Object> {
+    try {
+      const { projectId, userId, workCtx } = param;
+
+      const user = await this.baseSysUserEntity.findOne({ id: userId });
+      if (!user) {
+        throw new CoolCommException('没有该用户');
+      }
+      const exists = await this.projectAppUserEntity.findOne({
+        projectId, user
+      });
+      if (!_.isEmpty(exists)) {
+        throw new CoolCommException('项目已添加该用户');
+      };
+      return await this.projectAppUserEntity.save({
+        projectId,
+        user,
+        workCtx
+      });
+    } catch (err) {
+      throw new CoolCommException(err.message);
     }
-    await this.projectAppUserEntity.save({
-      projectId,
-      userId,
-      workCtx
-    })
   }
 
   /**
    * 删除项目参与用户
    * @param userId
    */
-  async delUser(projectId: number, userId: number): Promise<void> {
-    await this.projectAppUserEntity.delete({
-      projectId,
-      userId
-    })
-  }
-
-  /**
-   * 根据用户ID获得所有用户项目
-   * @param userId
-   */
-  async getByUser(userId: number): Promise<number[]> {
-    const userProject = await this.projectAppUserEntity.find({ userId });
-    if (!_.isEmpty(userProject)) {
-      return userProject.map(e => {
-        return e.projectId
-      })
-    }
-    return [];
-  }
-
-  /**
-   * 根据项目ID获得所有参与的用户
-   * @param userId
-   */
-  async getUsers(projectId: number): Promise<BaseSysUserEntity[]> {
-    const prjusers = await this.projectAppUserEntity.find({ projectId });
-
-    if (!_.isEmpty(prjusers)) {
-      const ids = prjusers.map(e => e.userId);
-      const users = await this.baseSysUserEntity.find({ where: { id: In(ids) } });
-      let workCtxs = [];
-      prjusers.forEach(u => workCtxs[u.userId] = u.workCtx)
-      return users.map((u) => {
-        return { ...u, workCtx: workCtxs[u.id] }
-      })
-    }
-    return [];
+  async delete(ids): Promise<void> {
+    return super.delete(ids);
   }
 }
