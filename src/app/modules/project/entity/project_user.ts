@@ -1,6 +1,6 @@
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from '@cool-midway/core';
-import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, ManyToOne } from 'typeorm';
 import { BaseSysUserEntity } from '../../base/entity/sys/user';
 
 /**
