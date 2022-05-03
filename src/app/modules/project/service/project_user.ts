@@ -27,19 +27,25 @@ export class ProjectAppUserService extends BaseService {
   async page(query: any, option: any, connectionName?: any): Promise<any> {
     try {
       const { size = this.config.page.size, page = 1, projectId } = query;
+      const skip = (page - 1) * size;
+
       const users = await this.projectAppUserEntity.findAndCount({
         where: projectId ? { projectId } : {},
-        relations: ["user"]
+        relations: ["user"],
+        skip,
+        take: size
       });
       
       const result = users[0].map((item) => {
-        const user = item.user;
+        const { headImg, name, nickName, phone } = item.user;
         delete item.user;
-        delete user.password;
 
         return {
           ...item,
-          ...user
+          headImg,
+          name,
+          nickName,
+          phone
         }
       })
 

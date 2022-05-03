@@ -4,7 +4,7 @@ import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { ProjectAppEntity } from '../entity/project';
 import { ProjectAppEquipmentEntity } from '../entity/equipment';
-import { ProjectAppEquipmentListEntity} from '../entity/equipment_list';
+import { ProjectAppEquipmentListEntity } from '../entity/equipment_list';
 import * as _ from 'lodash';
 
 /**
@@ -20,7 +20,7 @@ export class ProjectAppEquipmentListService extends BaseService {
 
   @InjectEntityModel(ProjectAppEquipmentEntity)
   equmipmentEntity: Repository<ProjectAppEquipmentEntity>;
-  
+
   @InjectEntityModel(ProjectAppEquipmentListEntity)
   equmipmentListEntity: Repository<ProjectAppEquipmentListEntity>;
 
@@ -28,15 +28,22 @@ export class ProjectAppEquipmentListService extends BaseService {
   async page(query: any, option: any, connectionName?: any): Promise<any> {
     try {
       const { size = this.config.page.size, page = 1, projectId } = query;
+      const skip = (page - 1) * size;
+
+      const project = await this.projectEntity.findOne({ where: { id: projectId }, relations: ["equipments"] });
+      if (!project) throw new CoolCommException('没有该项目');
 
       const equipments = await this.equmipmentListEntity.findAndCount({
-        where: projectId ? { projectId } : {},
-        relations: ["equipment"]
+        relations: ["project", "equipment"],
+        where: projectId ? { project: { id: projectId } } : {},
+        skip,
+        take: size
       });
 
       const result = equipments[0].map((item) => {
         const equipment = item.equipment;
         delete item.equipment;
+        delete equipment.id;
 
         return {
           ...item,
@@ -77,16 +84,15 @@ export class ProjectAppEquipmentListService extends BaseService {
     try {
       const { projectId, equipmentId, unit, count, price, totalprice, remark } = param;
 
-      const project = this.projectEntity.findOne({ id: projectId });
+      const project = await this.projectEntity.findOne(projectId);
       if (!project) {
         throw new CoolCommException('没有该项目');
       }
-      const equipment = await this.equmipmentEntity.findOne({
-        where: { id: equipmentId }
-      });
+      const equipment = await this.equmipmentEntity.findOne(equipmentId);
       if (!equipment) {
         throw new CoolCommException('没有该设备');
       };
+
       const equipmentObj: any = await new ProjectAppEquipmentListEntity();
       equipmentObj.project = project;
       equipmentObj.equipment = equipment;
@@ -104,7 +110,7 @@ export class ProjectAppEquipmentListService extends BaseService {
   }
 
   /**
-   * 删除项目参与用户
+   * 删除项目设备
    * @param userId
    */
   async delete(ids): Promise<void> {
