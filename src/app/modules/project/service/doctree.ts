@@ -21,6 +21,8 @@ export class ProjectAppDocTreeService extends BaseService {
   @InjectEntityModel(ProjectAppDocEntity)
   projectAppDocEntity: Repository<ProjectAppDocEntity>;
 
+  private tableName: string;
+  
   /**
    * 获得所有目录
    */
@@ -47,14 +49,18 @@ export class ProjectAppDocTreeService extends BaseService {
    * @param param
    */
   async add(param: any): Promise<Object> {
-    if (param.type == 1) {
-      const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
-      param.name = doc.name;
-      param.data = doc.data;
-      param.count = doc.count;
-      return this.projectAppDocTreeEntity.save(param);
-    } else {
-      return this.projectAppDocTreeEntity.save(param);
+    try {
+      if (param.type == 1) {
+        const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
+        param.name = doc.name;
+        param.data = doc.data;
+        param.count = doc.count;
+        return this.projectAppDocTreeEntity.save(param);
+      } else {
+        return this.projectAppDocTreeEntity.save(param);
+      }
+    } catch (err) {
+      throw new CoolCommException(err.message)
     }
   }
 
@@ -112,10 +118,13 @@ export class ProjectAppDocTreeService extends BaseService {
    */
   private getTabname(projectId: number = 0) {
     try {
+      if (this.tableName) return this.tableName;
+
       if (projectId === 0) {
         throw new CoolCommException('没有传入项目ID参数');
       }
-      return `project_app_tree_${projectId}`;
+      this.tableName = `project_app_tree_${projectId}`+"";
+      return this.tableName;
     } catch (err) {
       throw new CoolCommException(err.message);
     }
@@ -163,21 +172,71 @@ export class ProjectAppDocTreeService extends BaseService {
    */
   async prjDocAdd(param: any): Promise<Object> {
     try {
-      const sql = (param) => `INSERT INTO ${this.getTabname(param.projectId)} (
+      const sql = (args) => `INSERT INTO ${this.getTabname(param.projectId)} (
           id, createTime, updateTime,
           parentId, name, type, docId,
           data, remark, orderNum
         ) VALUES (
           DEFAULT, DEFAULT, DEFAULT,
-          ${param?.parentId ?? 'DEFAULT'}, '${param.name}', ${param.type}, ${param?.docId ?? 'DEFAULT'},
-          '${param?.data ?? ''}', '${param?.remark ?? ''}', ${param?.orderNum ?? 'DEFAULT'}
+          ${args?.parentId ?? 'DEFAULT'}, '${args.name}', ${args.type}, ${args?.docId ?? 'DEFAULT'},
+          '${args?.data ?? ''}', '${args?.remark ?? ''}', ${args?.orderNum ?? 'DEFAULT'}
         );`
   
       if (param.type == 1) {
         const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
         param.data = doc.data;
         param.count = doc.count;
+      } else if (param.type == 2 && param.docNodes) {
+        const docs = await this.projectAppDocEntity.find();
+        let parents = [];
+
+        const setParentId = (obj) => {
+          // 根据旧父节点id寻找新的父节点id
+          const idx = parents.findIndex((n) => n.id === obj.parentId);
+          const oldParent = parents[idx];
+          if (oldParent) {
+            obj.parentId = oldParent.nowId;
+          } else {
+            obj.parentId = param.parentId;
+          }
+        }
+
+        for (const node of param.docNodes) {
+          const docIdx = docs.findIndex((doc) => doc.id === node.docId);
+          const doc = docs[docIdx];
+
+          const obj = { ...node };
+          if (doc) {
+            obj.data = doc.data;
+          }
+
+          // 默认节点添加到param目标节点
+          obj.parentId = param.parentId;
+
+          // 具有子节点的父节点，否则都是子节点
+          if (node.children) {
+            // 属于父节点下的子目录
+            if (node.parentId) {
+              obj.parentId = node.parentId;
+
+              setParentId(obj);
+            }
+            const res = await this.nativeQuery(sql(obj));
+            // 记录新旧父节点id，并把node.id转string类型和node.parentId 作 === 比较
+            parents.push({id: node.id+"", nowId: res.insertId });
+          } else {
+            // 子节点设置原来的父节点id
+            obj.parentId = node.parentId;
+
+            setParentId(obj);
+            
+            await this.nativeQuery(sql(obj));
+          }
+        }
+
+        return
       }
+
       return await this.nativeQuery(sql(param));
     } catch (err) {
       throw new CoolCommException(err.message);
