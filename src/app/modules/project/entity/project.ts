@@ -1,12 +1,16 @@
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from '@cool-midway/core';
-import { Column } from 'typeorm';
+import { AfterRemove, Column, OneToMany } from 'typeorm';
+import { ProjectAppEquipmentListEntity } from './equipment_list';
 
 /**
  * 项目实体
  */
 @EntityModel('project_app_prj')
 export class ProjectAppEntity extends BaseEntity {
+  @Column({ comment: '项目全称' })
+  fullName: string;
+
   @Column({ comment: '建设项目名称' })
   name: string;
 
@@ -45,4 +49,8 @@ export class ProjectAppEntity extends BaseEntity {
 
   @Column({ type: 'timestamp', comment: '收款日' })
   payDate: Date;
+
+  @OneToMany(() => ProjectAppEquipmentListEntity, equipment => equipment.project, { cascade: true })
+  equipments: ProjectAppEquipmentListEntity[];
+
 }

@@ -10,7 +10,7 @@ import { ProjectAppEntity } from './project';
 @EntityModel('project_app_equipment_list')
 export class ProjectAppEquipmentListEntity extends BaseEntity {
 
-  @ManyToOne((type) => ProjectAppEntity, project => project.equipments)
+  @ManyToOne((type) => ProjectAppEntity, project => project.equipments, { onDelete: "CASCADE" })
   project: ProjectAppEntity;
 
   @ManyToOne(() => ProjectAppEquipmentEntity)
