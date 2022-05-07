@@ -4,14 +4,14 @@ import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import { ProjectAppEntity } from '../entity/project';
 import { ProjectAppEquipmentEntity } from '../entity/equipment';
-import { ProjectAppEquipmentListEntity } from '../entity/equipment_list';
+import { ProjectAppPrjEquipmentEntity } from '../entity/project_equipment';
 import * as _ from 'lodash';
 
 /**
  * 项目关联设备列表
  */
 @Provide()
-export class ProjectAppEquipmentListService extends BaseService {
+export class ProjectAppPrjEquipmentService extends BaseService {
   @Config('cool')
   config: CoolConfig;
 
@@ -21,8 +21,8 @@ export class ProjectAppEquipmentListService extends BaseService {
   @InjectEntityModel(ProjectAppEquipmentEntity)
   equmipmentEntity: Repository<ProjectAppEquipmentEntity>;
 
-  @InjectEntityModel(ProjectAppEquipmentListEntity)
-  equmipmentListEntity: Repository<ProjectAppEquipmentListEntity>;
+  @InjectEntityModel(ProjectAppPrjEquipmentEntity)
+  equmipmentListEntity: Repository<ProjectAppPrjEquipmentEntity>;
 
 
   async page(query: any, option: any, connectionName?: any): Promise<any> {
@@ -93,7 +93,7 @@ export class ProjectAppEquipmentListService extends BaseService {
         throw new CoolCommException('没有该设备');
       };
 
-      const equipmentObj: any = await new ProjectAppEquipmentListEntity();
+      const equipmentObj: any = await new ProjectAppPrjEquipmentEntity();
       equipmentObj.project = project;
       equipmentObj.equipment = equipment;
       equipmentObj.unit = unit;
