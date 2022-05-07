@@ -1,15 +1,18 @@
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from '@cool-midway/core';
-import { Column } from 'typeorm';
+import { ManyToOne } from 'typeorm';
+import { ProjectAppEntity } from '../entity/project';
+import { ProjectAppContactEntity } from './contact';
+
 
 /**
  * 项目关联联系方式中间表
  */
 @EntityModel('project_app_prj_contacts')
 export class ProjectAppPrjContactsEntity extends BaseEntity {
-  @Column({ comment: '项目Id' })
-  projectId: number;
+  @ManyToOne((type) => ProjectAppEntity, project => project.contacts, { onDelete: "CASCADE" })
+  project: ProjectAppEntity;
 
-  @Column({ comment: '联系Id' })
-  contactsId: number;
+  @ManyToOne(() => ProjectAppContactEntity, contact => contact.contacts, { onDelete: "CASCADE" })
+  contact: ProjectAppContactEntity;
 }

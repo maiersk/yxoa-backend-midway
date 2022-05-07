@@ -1,7 +1,8 @@
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from '@cool-midway/core';
-import { AfterRemove, Column, OneToMany } from 'typeorm';
-import { ProjectAppEquipmentListEntity } from './equipment_list';
+import { Column, OneToMany } from 'typeorm';
+import { ProjectAppPrjEquipmentEntity } from './project_equipment';
+import { ProjectAppPrjContactsEntity } from './project_contacts';
 
 /**
  * 项目实体
@@ -17,13 +18,16 @@ export class ProjectAppEntity extends BaseEntity {
   @Column({ comment: '建设单位名称' })
   builderName: string;
 
+  @Column({ comment: '设计单位名称' })
+  designName: string;
+
   @Column({ comment: '监理单位名称' })
   supervisionName: string;
 
   @Column({ comment: '承建单位名称' })
   undertookName: string;
 
-  @Column({ comment: '进度' })
+  @Column({ comment: '进度', nullable: true })
   process: string;
 
   @Column({ comment: '采购人' })
@@ -35,9 +39,6 @@ export class ProjectAppEntity extends BaseEntity {
   @Column({ comment: '总价' })
   totalPrice: number;
 
-  @Column({ comment: '文档树表名', nullable: true })
-  tableName: string;
-
   @Column({ type: 'timestamp', comment: '计划开工日期' })
   startDate: Date;
   
@@ -47,10 +48,13 @@ export class ProjectAppEntity extends BaseEntity {
   @Column({ comment: '工期' })
   dateCount: number;
 
-  @Column({ type: 'timestamp', comment: '收款日' })
+  @Column({ type: 'timestamp', comment: '收款日', nullable: true})
   payDate: Date;
 
-  @OneToMany(() => ProjectAppEquipmentListEntity, equipment => equipment.project, { cascade: true })
-  equipments: ProjectAppEquipmentListEntity[];
+  @OneToMany(() => ProjectAppPrjEquipmentEntity, equipment => equipment.project, { cascade: true })
+  equipments: ProjectAppPrjEquipmentEntity[];
+
+  @OneToMany(() => ProjectAppPrjContactsEntity, contacts => contacts.project, { cascade: true })
+  contacts: ProjectAppPrjContactsEntity[];
 
 }

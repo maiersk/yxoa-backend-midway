@@ -7,17 +7,14 @@ import { ProjectAppEntity } from './project';
 /**
  * 设备清单
  */
-@EntityModel('project_app_equipment_list')
-export class ProjectAppEquipmentListEntity extends BaseEntity {
+@EntityModel('project_app_prj_equipment')
+export class ProjectAppPrjEquipmentEntity extends BaseEntity {
 
   @ManyToOne((type) => ProjectAppEntity, project => project.equipments, { onDelete: "CASCADE" })
   project: ProjectAppEntity;
 
   @ManyToOne(() => ProjectAppEquipmentEntity)
   equipment: ProjectAppEquipmentEntity;
-  
-  @Column({ comment: '单位' })
-  unit: string;
 
   @Column({ comment: '数量' })
   count: number;
@@ -28,7 +25,7 @@ export class ProjectAppEquipmentListEntity extends BaseEntity {
   @Column({ comment: '投标总价' })
   totalprice: number;
 
-  @Column({ comment: '备注' })
+  @Column({ comment: '备注', nullable: true})
   remark: string;
 
 }

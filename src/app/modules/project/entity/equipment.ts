@@ -25,4 +25,7 @@ export class ProjectAppEquipmentEntity extends BaseEntity {
 
   @Column({ comment: '国籍' })
   country: string;
+
+  @Column({ comment: '数量单位' })
+  unit: string;
 }
