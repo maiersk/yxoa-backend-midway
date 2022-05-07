@@ -1,13 +1,17 @@
 import { Provide } from '@midwayjs/decorator';
 import { CoolController, BaseController } from '@cool-midway/core';
-import { ProjectAppContactsEntity } from '../../entity/contacts';
+import { ProjectAppPrjContactsEntity } from '../../entity/project_contacts';
+import { ProjectAppPrjContactsService } from '../../service/project_contacts';
 
 /**
- * 各方联系方式控制器
+ * 项目用户控制器
  */
 @Provide()
 @CoolController({
   api: ['add', 'delete', 'update', 'info', 'list', 'page'],
-  entity: ProjectAppContactsEntity,
+  entity: ProjectAppPrjContactsEntity,
+  service: ProjectAppPrjContactsService
 })
-export class ProjectAppContactsController extends BaseController {}
+export class ProjectAppPrjContactsController extends BaseController {
+
+}
