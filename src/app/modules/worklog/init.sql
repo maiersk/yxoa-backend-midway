@@ -3,7 +3,7 @@
 -- ----------------------------
 BEGIN;
 SELECT SLEEP(3); -- 等待表结构创建完成后再执行（表数据多时候需要修改等候时间）
-INSERT INTO `base_sys_menu` VALUES (120, '2021-10-05 06:19:56.000000', '2021-10-06 09:30:06.000000', 45, '日志', '/worklog/', NULL, 1, 'icon-log', 4, 'cool/modules/worklog/views/wlog.vue', 1, 1);
+INSERT INTO `base_sys_menu` VALUES (120, '2021-10-05 06:19:56.000000', '2021-10-06 09:30:06.000000', 1, '日志', '/worklog/', NULL, 1, 'icon-log', 4, 'cool/modules/worklog/views/wlog.vue', 1, 1);
 INSERT INTO `base_sys_menu` VALUES (121, '2021-09-27 01:37:32.000000', '2021-09-28 09:05:22.000000', NULL, '日志管理', NULL, '', 0, 'icon-log', 4, NULL, 1, 1);
 INSERT INTO `base_sys_menu` VALUES (122, '2021-09-27 01:37:32.000000', '2021-09-28 09:05:22.000000', 121, '日志列表', '/worklog/admin/wlog', '', 1, 'icon-log', 1, 'cool/modules/worklog/views/admin/wlog.vue', 1, 1);
 INSERT INTO `base_sys_menu` VALUES (123, '2021-10-06 01:39:47.000000', '2021-10-06 09:26:34.000000', 121, '日志分组', '/worklog/admin/category', NULL, 1, 'icon-tag', 0, 'cool/modules/worklog/views/admin/category.vue', 1, 1);
