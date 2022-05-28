@@ -19,9 +19,6 @@ export class ProjectAppDocEntity extends BaseEntity {
   @Column({ comment: '文件', nullable: true })
   templateFile: string;
 
-  @Column({ comment: '数量', default: 1 })
-  count: number;
-
   @Column({ comment: '备注', default: '' })
   remark: string;
 }

@@ -54,7 +54,6 @@ export class ProjectAppDocTreeService extends BaseService {
         const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
         param.name = doc.name;
         param.data = doc.data;
-        param.count = doc.count;
         return this.projectAppDocTreeEntity.save(param);
       } else {
         return this.projectAppDocTreeEntity.save(param);
@@ -185,7 +184,7 @@ export class ProjectAppDocTreeService extends BaseService {
       if (param.type == 1) {
         const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
         param.data = doc.data;
-        param.count = doc.count;
+        param.docType  = doc.type;
       } else if (param.type == 2 && param.docNodes) {
         const docs = await this.projectAppDocEntity.find();
         let parents = [];

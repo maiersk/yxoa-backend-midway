@@ -17,15 +17,15 @@ export class ProjectAppEntity extends BaseEntity {
 
   @Column({ comment: '建设单位名称' })
   builderName: string;
-
-  @Column({ comment: '设计单位名称' })
-  designName: string;
-
-  @Column({ comment: '监理单位名称' })
-  supervisionName: string;
-
+  
   @Column({ comment: '承建单位名称' })
   undertookName: string;
+  
+  @Column({ comment: '监理单位名称', nullable: true })
+  supervisionName: string;
+
+  @Column({ comment: '设计单位名称', nullable: true })
+  designName: string;
 
   @Column({ comment: '进度', nullable: true })
   process: string;
