@@ -16,6 +16,7 @@ import { Context } from 'egg';
 @CoolController({
   api: ['add', 'delete', 'update', 'info', 'list', 'page'],
   entity: ProjectAppDocEntity,
+  service: ProjectAppDocService,
 })
 export class DocController extends BaseController {
   @Inject()
@@ -96,5 +97,13 @@ export class DocController extends BaseController {
     } catch (err) {
       throw new CoolCommException(err.message)
     }
+  }
+
+  /**
+   * 移动分类
+  */
+  @Post('/move', { summary: '移动分类' })
+  async move(@Body() category, @Body() docIds) {
+    return await this.docService.move(category, docIds)
   }
 }
