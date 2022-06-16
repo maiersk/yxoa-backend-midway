@@ -36,8 +36,8 @@ export class ProjectAppEntity extends BaseEntity {
   @Column({ comment: '采购人联系电话' })
   pur_phone: string;
 
-  @Column({ comment: '总价' })
-  totalPrice: number;
+  @Column({ type: 'bigint', comment: '总价' })
+  totalPrice: BigInteger;
 
   @Column({ type: 'timestamp', comment: '计划开工日期' })
   startDate: Date;

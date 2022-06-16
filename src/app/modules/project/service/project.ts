@@ -2,9 +2,10 @@ import * as _ from 'lodash';
 import { Provide, Config } from '@midwayjs/decorator';
 import { BaseService, CoolCommException, CoolConfig } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
-import { Repository, In } from 'typeorm';
+import { Repository, In, Like } from 'typeorm';
 import { ProjectAppEntity } from '../entity/project';
 import { ProjectAppContactEntity } from '../entity/contact';
+import { ProjectAppPrjArchiveEntity } from '../entity/archive';
 
 /**
  * 描述
@@ -20,12 +21,18 @@ export class ProjectAppService extends BaseService {
   @InjectEntityModel(ProjectAppContactEntity)
   contactAppEntity: Repository<ProjectAppContactEntity>;
 
+  @InjectEntityModel(ProjectAppPrjArchiveEntity)
+  archiveAppEntity: Repository<ProjectAppPrjArchiveEntity>;
+
   async page(query: any, option: any, connectionName?: any) {
     try {
-      const { size = this.config.page.size, page = 1 } = query;
+      const { size = this.config.page.size, page = 1, name = null } = query;
       const skip = (page - 1) * size;
 
       const projects = await this.projectAppEntity.findAndCount({
+        where: name ? {
+          name: Like(name)
+        } : {},
         relations: ["equipments", "contacts"],
         skip,
         take: size
@@ -70,8 +77,9 @@ export class ProjectAppService extends BaseService {
 
   async add(param: any): Promise<Object> {
     const project = await this.projectAppEntity.save(param);
-    await this.createTreeTable(project)
-    return project
+    await this.archiveAppEntity.save(param);
+    await this.createTreeTable(project);
+    return project;
   }
 
   /**

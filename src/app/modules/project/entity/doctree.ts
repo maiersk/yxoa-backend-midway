@@ -29,6 +29,9 @@ export class ProjectAppDocTreeEntity extends BaseEntity {
   @Column({ comment: '最终文件', nullable: true })
   file: string;
 
+  @Column({ comment: '状态', nullable: true })
+  status: string;
+
   @Column({ comment: '备注', default: '' })
   remark: string;
 

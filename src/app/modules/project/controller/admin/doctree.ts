@@ -1,8 +1,13 @@
+import { existsSync, mkdirSync, renameSync } from 'fs';
+import { join } from 'path';
+import { Context } from 'egg';
 import { ALL, Body, Inject, Post, Provide } from '@midwayjs/decorator';
-import { CoolController, BaseController } from '@cool-midway/core';
+import { CoolController, BaseController, CoolCommException } from '@cool-midway/core';
 import { ProjectAppDocTreeEntity } from '../../entity/doctree';
 import { ProjectAppDocTreeService } from '../../service/doctree';
 import { ProjectAppDocService } from '../../service/doc';
+import { ProjectAppService } from '../../service/project';
+import { getProjectDocFileUrl, getProjectWritePath, deleteProjectOldFile } from '../../../../comm/utils';
 
 /**
  * 工程文档树形结构
@@ -15,11 +20,58 @@ import { ProjectAppDocService } from '../../service/doc';
 })
 export class ProjectAppDocTreeController extends BaseController {
   @Inject()
+  ctx: Context;
+  
+  @Inject()
   projectAppDocTreeService: ProjectAppDocTreeService;
 
   @Inject()
   docService: ProjectAppDocService;
 
+  @Inject()
+  projectService: ProjectAppService;
+
+  /**
+   * 确认文档状态已完成
+   */
+  @Post('/success', { summary: '文档完成' })
+  async success(@Body() projectId, @Body() node) {
+    await this.projectAppDocTreeService.updateSQLFunc(projectId, `status = 'success'`, `id = ${node.id}`);
+    return this.ok();
+  }
+
+  /**
+   * 文档归档，从临时文件中迁移到归档文件夹
+   */
+  @Post('/save', { summary: '文档归档' })
+  async save(@Body() projectId, @Body() node, @Body() fileUrl) {
+    try {
+      const project = await this.projectService.projectAppEntity.findOne({where: { id : projectId }});
+      let oldPath, pathname = new URL(fileUrl).pathname;
+      oldPath = join(this.ctx.app.baseDir, '..', `public`, pathname)
+  
+      const { fileName, writePath } = await getProjectWritePath(project, node.orderName, pathname);
+      await renameSync(oldPath, writePath);
+
+      await deleteProjectOldFile(fileUrl);
+
+      await this.projectAppDocTreeService.updateSQLFunc(projectId, `file = '${getProjectDocFileUrl(project, fileName)}', status = 'wait'`, `id = ${node.id}`)
+
+      return this.ok();
+    } catch (err) {
+      throw new CoolCommException(err.message)
+    }
+  }
+  
+  /**
+   * 模板树复制节点
+   */
+  @Post('/copy', { summary: '复制' })
+  async copy(@Body(ALL) params: any) {
+    await this.projectAppDocTreeService.copy(params);
+    return this.ok();
+  }
+  
   /**
    * 部门排序
    */
@@ -41,7 +93,7 @@ export class ProjectAppDocTreeController extends BaseController {
   /**
    * 获得节点
    */
-  @Post('/prjdocinfo', { summary: 'prjdocx信息' })
+  @Post('/prjdocinfo', { summary: 'prjdoc信息' })
   async prjDocInfo(@Body() projectId: any, @Body() id: number) {
     const item = await this.projectAppDocTreeService.prjDocInfo({ projectId, id });
 
@@ -59,6 +111,16 @@ export class ProjectAppDocTreeController extends BaseController {
   @Post('/prjdocadd', { summary: 'prjdoc添加' })
   async prjDocAdd(@Body(ALL) params: any) {
     await this.projectAppDocTreeService.prjDocAdd(params);
+    return this.ok();
+  }
+  
+  /**
+   * 复制
+   * @param param
+   */
+  @Post('/prjdoccopy', { summary: 'prjdoc复制' })
+  async prjDocCopy(@Body(ALL) params: any) {
+    await this.projectAppDocTreeService.prjDocCopy(params);
     return this.ok();
   }
 

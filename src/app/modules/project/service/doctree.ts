@@ -3,7 +3,7 @@ import { Context } from 'egg';
 import { Inject, Provide } from '@midwayjs/decorator';
 import { BaseService, CoolCommException } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/orm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { ProjectAppDocTreeEntity } from '../entity/doctree';
 import { ProjectAppDocEntity } from '../entity/doc';
 
@@ -22,7 +22,58 @@ export class ProjectAppDocTreeService extends BaseService {
   projectAppDocEntity: Repository<ProjectAppDocEntity>;
 
   private tableName: string;
-  
+
+  /**
+   * 生成一维节点列表，带有children属性的树节点
+   * @param nodes 数据库所有节点列表
+   * @param nodeIds 需要生成树的节点ID
+   * @returns 
+   */
+  async createNodes(nodes, nodeIds) {
+    const newNodes: Array<any> = [];
+    const nodesMap: any = {};
+    for (const node of nodes) {
+      nodesMap[node.id] = node;
+    }
+    for (const nodeId of nodeIds) {
+      const node = nodesMap[nodeId];
+      const parent = nodesMap[node.parentId];
+
+      if (parent) {
+        (parent.children || (parent.children = [])).push(node);
+      }
+
+      newNodes.push(node);
+    }
+
+    const orderFn = (list: Array<any>) => {
+      for (const node of list) {
+        if (node.children instanceof Array) {
+          node.children = node.children.sort((a, b) => {
+            return a['orderNum'] - b['orderNum']
+          });
+
+          orderFn(node.children);
+        }
+      }
+    }
+    await orderFn(newNodes);
+
+    const root = nodesMap[nodeIds[0]];
+    let name = root.name;
+    if (name.indexOf('_副本') !== -1) {
+      let count: any = name.split('_副本')[1];
+      if (!count) count = 0;
+      name = name.substring(0, name.length - 1);
+      name = name + `${+count + 1}`;
+    } else {
+      name = name + '_副本1';
+    }
+    root.name = name;
+
+    return newNodes;
+  }
+
   /**
    * 获得所有目录
    */
@@ -59,7 +110,67 @@ export class ProjectAppDocTreeService extends BaseService {
         return this.projectAppDocTreeEntity.save(param);
       }
     } catch (err) {
-      throw new CoolCommException(err.message)
+      throw new CoolCommException(err.message);
+    }
+  }
+
+  /**
+   * 复制
+   * @param param
+   */
+  async copy(param: any) {
+    try {
+      if (!param.nodeIds) throw new CoolCommException('没有nodeIds参数');
+      const nodes = await this.projectAppDocTreeEntity.find({
+        where: { id: In(param.nodeIds) }
+      })
+      const newNodes = await this.createNodes(nodes, param.nodeIds);
+
+      const parents = [];
+      const setParentId = (obj) => {
+        // 根据旧父节点id寻找新的父节点id
+        const idx = parents.findIndex((n) => n.id === obj.parentId);
+        const oldParent = parents[idx];
+        if (oldParent) {
+          obj.parentId = oldParent.nowId;
+        } else {
+          obj.parentId = param.parentId;
+        }
+      }
+
+      for (const node of newNodes) {
+
+        const obj = { ...node };
+
+        // 默认节点添加到param目标节点
+        obj.parentId = param.parentId;
+
+        // 具有子节点的父节点，否则都是子节点
+        if (node.children) {
+          // 属于父节点下的子目录
+          if (node.parentId) {
+            obj.parentId = node.parentId;
+
+            setParentId(obj);
+          }
+          const ids: any = { id: node.id+"" };
+          delete obj.id;
+          const res = await this.projectAppDocTreeEntity.insert(obj);
+          // 记录新旧父节点id，并把node.id转string类型和node.parentId 作 === 比较
+          ids.nowId = res.raw.insertId
+          parents.push(ids);
+        } else {
+          // 子节点设置原来的父节点id
+          obj.parentId = node.parentId;
+
+          setParentId(obj);
+          
+          delete obj.id;
+          await this.projectAppDocTreeEntity.insert(obj);
+        }
+      }
+    } catch (err) {
+      throw new CoolCommException(err.message);
     }
   }
 
@@ -94,7 +205,7 @@ export class ProjectAppDocTreeService extends BaseService {
     })
     await this.projectAppDocTreeEntity.delete(delItemIds);
     for (const itemId of delItemIds) {
-      await this.delChildItem(itemId)
+      await this.delChildItem(itemId);
     }
   }
 
@@ -115,7 +226,7 @@ export class ProjectAppDocTreeService extends BaseService {
    * @param projectId 项目ID
    * @returns 项目树状数据库表名
    */
-  private getTabname(projectId: number = 0) {
+  getTabname(projectId: number = 0) {
     try {
       if (this.tableName) return this.tableName;
 
@@ -166,21 +277,48 @@ export class ProjectAppDocTreeService extends BaseService {
   }
 
   /**
+   * 新增SQL方法
+   * @param projectId
+   * @param args
+   */
+  async insertSQLFunc(projectId, args) {
+    return await this.nativeQuery(`INSERT INTO ${this.getTabname(projectId)} (
+      id, createTime, updateTime,
+      parentId, name, type, docId,
+      data, remark, orderNum, file, status
+    ) VALUES (
+      DEFAULT, DEFAULT, DEFAULT,
+      ${args?.parentId ?? 'DEFAULT'}, '${args.name}', ${args.type}, ${args?.docId ?? 'DEFAULT'},
+      '${args?.data ?? ''}', '${args?.remark ?? ''}', ${args?.orderNum ?? 'DEFAULT'},
+      ${args?.file ? `'${args.file}'`: null}, '${args.docId ? 'wait' : null}'
+    );`)
+  }
+
+  /**
+   * 查询SQL方法
+   * @param projectId
+   * @param where args in or args like
+   */
+  async selectSQLFunc(projectId, where: string) {
+    return await this.nativeQuery(`SELECT * FROM ${this.getTabname(projectId)} WHERE ${where}`);
+  }
+
+  /**
+   * 更新SQL方法
+   * @param projectId
+   */
+  async updateSQLFunc(projectId, set: string, where: string) {
+    return this.nativeQuery(`
+      UPDATE ${this.getTabname(projectId)} SET ${set} WHERE ${where};
+    `)
+  }
+
+  /**
    * 新增
    * @param param
    */
   async prjDocAdd(param: any): Promise<Object> {
     try {
-      const sql = (args) => `INSERT INTO ${this.getTabname(param.projectId)} (
-          id, createTime, updateTime,
-          parentId, name, type, docId,
-          data, remark, orderNum
-        ) VALUES (
-          DEFAULT, DEFAULT, DEFAULT,
-          ${args?.parentId ?? 'DEFAULT'}, '${args.name}', ${args.type}, ${args?.docId ?? 'DEFAULT'},
-          '${args?.data ?? ''}', '${args?.remark ?? ''}', ${args?.orderNum ?? 'DEFAULT'}
-        );`
-  
       if (param.type == 1) {
         const doc = await this.projectAppDocEntity.findOne({ where: { id: param.docId } });
         param.data = doc.data;
@@ -205,7 +343,7 @@ export class ProjectAppDocTreeService extends BaseService {
           const doc = docs[docIdx];
 
           const obj = { ...node };
-          if (doc) {
+          if (doc && !(node?.data ?? false)) {
             obj.data = doc.data;
           }
 
@@ -220,7 +358,7 @@ export class ProjectAppDocTreeService extends BaseService {
 
               setParentId(obj);
             }
-            const res = await this.nativeQuery(sql(obj));
+            const res = await this.insertSQLFunc(param.projectId, obj);
             // 记录新旧父节点id，并把node.id转string类型和node.parentId 作 === 比较
             parents.push({id: node.id+"", nowId: res.insertId });
           } else {
@@ -229,14 +367,35 @@ export class ProjectAppDocTreeService extends BaseService {
 
             setParentId(obj);
             
-            await this.nativeQuery(sql(obj));
+            await this.insertSQLFunc(param.projectId, obj);
           }
         }
 
         return
       }
+ 
+      return await this.insertSQLFunc(param.projectId, param);
+    } catch (err) {
+      throw new CoolCommException(err.message);
+    }
+  }
 
-      return await this.nativeQuery(sql(param));
+  async prjDocCopy(param: any): Promise<Object> {
+    try {
+      if (!param.nodeIds) throw new CoolCommException('没有nodeIds参数');
+      const nodes = await this.selectSQLFunc(param.projectId, `id In (${param.nodeIds.join(', ')})`)
+
+      const newNodes = await this.createNodes(nodes, param.nodeIds);
+
+      return await this.prjDocAdd({
+				type: 2,
+				docId: param.docId,
+				projectId: param.projectId,
+				docNodes: newNodes,
+				remark: param.remark,
+				parentId: param.parentId,
+				orderNum: param.orderNum
+      })
     } catch (err) {
       throw new CoolCommException(err.message);
     }
