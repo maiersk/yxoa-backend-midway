@@ -5,7 +5,7 @@ import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository, In, Like } from 'typeorm';
 import { ProjectAppEntity } from '../entity/project';
 import { ProjectAppContactEntity } from '../entity/contact';
-import { ProjectAppPrjArchiveEntity } from '../entity/archive';
+import { ProjectAppArchiveEntity } from '../entity/archive';
 
 /**
  * 描述
@@ -21,19 +21,26 @@ export class ProjectAppService extends BaseService {
   @InjectEntityModel(ProjectAppContactEntity)
   contactAppEntity: Repository<ProjectAppContactEntity>;
 
-  @InjectEntityModel(ProjectAppPrjArchiveEntity)
-  archiveAppEntity: Repository<ProjectAppPrjArchiveEntity>;
+  @InjectEntityModel(ProjectAppArchiveEntity)
+  archiveAppEntity: Repository<ProjectAppArchiveEntity>;
 
   async page(query: any, option: any, connectionName?: any) {
     try {
-      const { size = this.config.page.size, page = 1, name = null } = query;
+      const { size = this.config.page.size, page = 1,
+        name = null, builderName = null,
+        undertookName = null, supervisionName = null,
+      } = query;
       const skip = (page - 1) * size;
 
+      let where = {};
+      if (name) where["name"] = Like(`%${name}%`);
+      if (builderName) where["builderName"] = Like(`%${builderName}%`);
+      if (undertookName) where["undertookName"] = Like(`%${undertookName}%`);
+      if (supervisionName) where["supervisionName"] = Like(`%${supervisionName}%`)["undertookName"] = Like(`%${undertookName}%`);
+
       const projects = await this.projectAppEntity.findAndCount({
-        where: name ? {
-          name: Like(name)
-        } : {},
         relations: ["equipments", "contacts"],
+        where,
         skip,
         take: size
       });

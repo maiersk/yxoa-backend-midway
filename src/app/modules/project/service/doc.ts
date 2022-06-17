@@ -29,7 +29,7 @@ export class ProjectAppDocService extends BaseService {
       const skip = (page - 1) * size;
 
       let where = {};
-      if (name) where["name"] = Like(name);
+      if (name) where["name"] = Like(`%${name}%`);
       if (category) where["category"] = { id: category };
 
       const docs = await this.projectAppDocEntity.findAndCount({
