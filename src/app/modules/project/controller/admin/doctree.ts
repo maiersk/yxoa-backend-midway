@@ -7,7 +7,7 @@ import { ProjectAppDocTreeEntity } from '../../entity/doctree';
 import { ProjectAppDocTreeService } from '../../service/doctree';
 import { ProjectAppDocService } from '../../service/doc';
 import { ProjectAppService } from '../../service/project';
-import { getProjectDocFileUrl, getProjectWritePath, deleteProjectOldFile } from '../../../../comm/utils';
+import { getProjectDocFileUrl, getProjectWritePath, deleteOldFile } from '../../../../comm/utils';
 
 /**
  * 工程文档树形结构
@@ -53,7 +53,7 @@ export class ProjectAppDocTreeController extends BaseController {
       const { fileName, writePath } = await getProjectWritePath(project, node.orderName, pathname);
       await renameSync(oldPath, writePath);
 
-      await deleteProjectOldFile(fileUrl);
+      await deleteOldFile(fileUrl);
 
       await this.projectAppDocTreeService.updateSQLFunc(projectId, `file = '${getProjectDocFileUrl(project, fileName)}', status = 'wait'`, `id = ${node.id}`)
 

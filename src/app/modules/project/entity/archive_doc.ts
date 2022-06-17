@@ -1,12 +1,13 @@
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from '@cool-midway/core';
-import { Column } from 'typeorm';
+import { Column, ManyToOne } from 'typeorm';
+import { ProjectAppArchiveEntity } from './archive';
 
 /**
  * 描述
  */
-@EntityModel('project_app_prj_archive_doctree')
-export class ProjectAppPrjArchiveDocTreeEntity extends BaseEntity {
+@EntityModel('project_app_archive_doctree')
+export class ProjectAppArchiveDocTreeEntity extends BaseEntity {
   @Column({ comment: '名称' })
   name: string;
 
@@ -28,6 +29,9 @@ export class ProjectAppPrjArchiveDocTreeEntity extends BaseEntity {
 
   @Column({ comment: '排序' })
   orderNum: number;
+
+  @ManyToOne((type) => ProjectAppArchiveEntity, archive => archive.archiveDoc, { onDelete: "CASCADE" })
+  archive: ProjectAppArchiveEntity;
 
   // 父菜单名称
   parentName: string;

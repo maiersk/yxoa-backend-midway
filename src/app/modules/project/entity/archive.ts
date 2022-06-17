@@ -1,12 +1,13 @@
 import { EntityModel } from '@midwayjs/orm';
 import { BaseEntity } from '@cool-midway/core';
-import { Column } from 'typeorm';
+import { Column, OneToMany } from 'typeorm';
+import { ProjectAppArchiveDocTreeEntity } from './archive_doc';
 
 /**
  * 描述
  */
-@EntityModel('project_app_prj_archive')
-export class ProjectAppPrjArchiveEntity extends BaseEntity {
+@EntityModel('project_app_archive')
+export class ProjectAppArchiveEntity extends BaseEntity {
   @Column({ comment: '项目全称' })
   fullName: string;
 
@@ -37,4 +38,9 @@ export class ProjectAppPrjArchiveEntity extends BaseEntity {
   @Column({ comment: '总价' })
   totalPrice: number;
 
+  @Column({ type: 'timestamp', comment: '归档日期' })
+  archiveDate: Date;
+
+  @OneToMany(() => ProjectAppArchiveDocTreeEntity, archivedocs => archivedocs.archive, { cascade: true })
+  archivedocs: ProjectAppArchiveDocTreeEntity[];
 }
