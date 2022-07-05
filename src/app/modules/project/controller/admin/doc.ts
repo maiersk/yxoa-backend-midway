@@ -6,7 +6,7 @@ import { ProjectAppDocEntity } from '../../entity/doc';
 import { ProjectAppService } from '../../service/project';
 import { ProjectAppDocService } from '../../service/doc';
 import createReport from 'docx-templates';
-import { getProjectDocFileUrl, getProjectWritePath, deleteProjectOldFile } from '../../../../comm/utils';
+import { getProjectDocFileUrl, getProjectWritePath, deleteOldFile } from '../../../../comm/utils';
 import { Context } from 'egg';
 import { ProjectAppDocTreeService } from '../../service/doctree';
 
@@ -68,8 +68,8 @@ export class DocController extends BaseController {
           ...fields
         },
         additionalJsContext: {
-          getTxt() {
-            return `ss_str`
+          strArr(str) {
+            return str.split(',');
           },
           ...images
         },
@@ -86,7 +86,7 @@ export class DocController extends BaseController {
         await this.docTreeService.updateSQLFunc(projectId, `file = '${resUrl}', status = 'wait'`, `id = ${node.id}`);
 
         if (node.file) {
-          await deleteProjectOldFile(node.file);
+          await deleteOldFile(node.file);
         }
       }
 

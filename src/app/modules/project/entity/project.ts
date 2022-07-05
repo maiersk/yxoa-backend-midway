@@ -3,6 +3,7 @@ import { BaseEntity } from '@cool-midway/core';
 import { Column, OneToMany } from 'typeorm';
 import { ProjectAppPrjEquipmentEntity } from './project_equipment';
 import { ProjectAppPrjContactsEntity } from './project_contacts';
+import { ProjectAppPointEntity } from './point';
 
 /**
  * 项目实体
@@ -30,10 +31,10 @@ export class ProjectAppEntity extends BaseEntity {
   @Column({ comment: '进度', nullable: true })
   process: string;
 
-  @Column({ comment: '采购人' })
+  @Column({ comment: '采购人', nullable: true })
   purchaser: string;
 
-  @Column({ comment: '采购人联系电话' })
+  @Column({ comment: '采购人联系电话', nullable: true })
   pur_phone: string;
 
   @Column({ type: 'bigint', comment: '总价' })
@@ -56,5 +57,8 @@ export class ProjectAppEntity extends BaseEntity {
 
   @OneToMany(() => ProjectAppPrjContactsEntity, contacts => contacts.project, { cascade: true })
   contacts: ProjectAppPrjContactsEntity[];
+
+  @OneToMany(() => ProjectAppPointEntity, points => points.project, { cascade: true })
+  points: ProjectAppPointEntity[];
 
 }
