@@ -28,8 +28,8 @@ export class ProjectAppArchiveService extends BaseService {
       if (builderName) where["builderName"] = Like(`%${builderName}%`);
       if (undertookName) where["undertookName"] = Like(`%${undertookName}%`);
       if (supervisionName) where["supervisionName"] = Like(`%${supervisionName}%`);
-      if (year) where["createTime"] = Like(`${year}%`);
-      if (month) where["createTime"] = Like(`%-${month}-%`);
+      if (year) where["archiveDate"] = Like(`${year}%`);
+      if (month) where["archiveDate"] = Like(`%-${month}-%`);
 
       const archive = await this.archiveEntity.findAndCount({
         relations: ["archivedocs"],
