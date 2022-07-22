@@ -40,9 +40,10 @@ export class TaskInfoService extends BaseService {
   async stop(id) {
     const task = await this.taskInfoEntity.findOne({ id });
     if (task) {
-      const job = await this.exist(task.id);
+      const result = await this.taskInfoQueue.getRepeatableJobs();
+      const job = _.find(result, { id: task.id + '' });
       if (job) {
-        await this.taskInfoQueue.removeRepeatable(JSON.parse(task.repeatConf));
+        await this.taskInfoQueue.removeRepeatableByKey(job.key);
       }
       task.status = 0;
       await this.taskInfoEntity.update(task.id, task);
@@ -115,9 +116,7 @@ export class TaskInfoService extends BaseService {
       if (params.status === 1) {
         const exist = await this.exist(params.id);
         if (exist) {
-          await this.taskInfoQueue.removeRepeatable(
-            JSON.parse(params.repeatConf)
-          );
+          this.stop(params.id);
         }
         const { every, limit, startDate, endDate, cron } = params;
         const repeat = {
@@ -169,7 +168,7 @@ export class TaskInfoService extends BaseService {
       const task = await this.taskInfoEntity.findOne({ id });
       const exist = await this.exist(task.id);
       if (exist) {
-        await this.taskInfoQueue.removeRepeatable(JSON.parse(task.repeatConf));
+        this.stop(task.id);
       }
       await this.taskInfoEntity.delete({ id });
       await this.taskLogEntity.delete({ taskId: id });
@@ -262,6 +261,19 @@ export class TaskInfoService extends BaseService {
       'update task_info a set a.nextRunTime = ? where a.id = ?',
       [await this.getNextRunTime(jobId), jobId]
     );
+  }
+
+  /**
+   * 详情
+   * @param id
+   * @returns
+   */
+  async info(id: any): Promise<any> {
+    const info = await this.taskInfoEntity.findOne({ id });
+    return {
+      ...info,
+      repeatCount: info.limit,
+    };
   }
 
   /**
